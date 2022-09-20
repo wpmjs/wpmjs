@@ -45,18 +45,6 @@ module.exports = {
         './App': './src/App',
       },
       remotes: {
-        klein: `promise new Promise(async re => {
-          const klein = await window.System.import("https://wpm.hsmob.com/wpmv2/react/latest/online/index.js")
-          re({
-            init () {},
-            get() {
-              return function () {
-                return klein
-              }
-            }
-          })
-        })`,
-        // app3: "app3@[app3Url]/remoteEntry.js"
       },
       shareScope: "default",
       shared: { react: { singleton: true }, 'react-dom': { singleton: true } },
