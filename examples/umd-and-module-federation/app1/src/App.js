@@ -1,7 +1,6 @@
 import React, {Suspense} from "react";
 
 const shared = {
-  shareScope: "default",
   react: {
     version: "17.0.2",
     async get () {
@@ -28,7 +27,6 @@ const app2_version1 = mfjs.import({
   url: "http://localhost:9002/remoteEntry.js",
   name: "app2",
   shared:  {
-    // shareScope: "scope2",
     react: shared.react
   }
 })("./App")
