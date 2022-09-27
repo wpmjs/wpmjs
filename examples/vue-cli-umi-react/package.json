@@ -3,8 +3,8 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "vue-cli",
-      "umi"
+      "vue-cli-demo",
+      "umi-demo"
     ]
   },
   "scripts": {
