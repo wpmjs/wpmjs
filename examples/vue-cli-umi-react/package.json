@@ -1,5 +1,5 @@
 {
-  "name": "import-http-demo",
+  "name": "mf-demo",
   "private": true,
   "workspaces": {
     "packages": [

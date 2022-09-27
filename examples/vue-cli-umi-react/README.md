@@ -1,6 +1,7 @@
 # mf-webpack4
 
 Module Federation is implemented in webpack4. 
+Vue-cli as host and umi as remote
 
 ## How to use
 
