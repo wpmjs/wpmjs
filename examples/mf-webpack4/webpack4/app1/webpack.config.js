@@ -1,6 +1,5 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const fs = require("fs")
-const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const path = require("path")
 const MF = require("mf-webpack4")
 
@@ -27,9 +26,6 @@ module.exports = {
     port: 9001,
   },
   plugins: [
-    new ReactRefreshPlugin({
-      overlay: false
-    }),
     new MF({
       remotes: {
         "app2": "app2@http://localhost:9002/remoteEntry.js",

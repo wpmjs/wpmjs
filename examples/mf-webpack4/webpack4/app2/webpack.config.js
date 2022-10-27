@@ -27,9 +27,6 @@ module.exports = {
     port: 9002,
   },
   plugins: [
-    new ReactRefreshPlugin({
-      overlay: false
-    }),
     new MF({
       name: "app2",
       filename: "remoteEntry.js",
@@ -44,6 +41,9 @@ module.exports = {
       exposes: {
         "./App": "./src/App2"
       }
+    }),
+    new ReactRefreshPlugin({
+      overlay: false
     }),
     new HtmlWebpackPlugin()
   ],

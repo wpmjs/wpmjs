@@ -7,7 +7,6 @@ module.exports = {
     }],
   ],
   plugins: [
-    "react-refresh/babel",
   ],
   sourceType: "unambiguous"
 }
