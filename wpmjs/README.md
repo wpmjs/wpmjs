@@ -10,8 +10,8 @@
 * Support webpack4 + webpack5
 
 ## milepost（Sequential implementation）
-* [mf-webpack4](https://www.npmjs.com/package/mf-webpack4)  <input type="checkbox" checked />
-* [import-http-webpack-plugin](https://www.npmjs.com/package/import-http-webpack-plugin) This plug-in will be integrated into "mf-webpack4", please do not use it alone <input type="checkbox" />
+* [@module-federation/webpack-4](https://www.npmjs.com/package/@module-federation/webpack-4)  <input type="checkbox" checked />
+* [import-http-webpack-plugin](https://www.npmjs.com/package/import-http-webpack-plugin) This plug-in will be integrated into "@module-federation/webpack-4", please do not use it alone <input type="checkbox" />
 * module-federation webpack5 Support umd <input type="checkbox" />
 * Convenient development mode+hot update <input type="checkbox" />
 

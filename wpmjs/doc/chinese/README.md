@@ -7,8 +7,8 @@
 * 支持webpack4+webpack5
 
 ## 里程碑（顺序实施）
-* [mf-webpack4](https://www.npmjs.com/package/mf-webpack4)<input type="checkbox" checked />
-* [import-http-webpack-plugin](https://www.npmjs.com/package/import-http-webpack-plugin)此插件将集成到“mf-webpack4”中，请不要单独使用 <input type="checkbox" />
+* [@module-federation/webpack-4](https://www.npmjs.com/package/@module-federation/webpack-4)<input type="checkbox" checked />
+* [import-http-webpack-plugin](https://www.npmjs.com/package/import-http-webpack-plugin)此插件将集成到“@module-federation/webpack-4”中，请不要单独使用 <input type="checkbox" />
 * module-federation webpack5支持umd <input type="checkbox" />
 * 方便的开发模式+热更新 <input type="checkbox" />
 
