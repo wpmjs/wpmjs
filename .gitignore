@@ -1,6 +1,7 @@
 node_modules
 */.DS_Store
 .DS_Store
-yarn.lock
-/dist
+dist
+package-lock.json
 /.idea
+yarn.lock
