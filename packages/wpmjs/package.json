@@ -11,9 +11,9 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/wpmjs/wpmjs/tree/main/wpmjs"
+        "url": "https://github.com/wpmjs/wpmjs/tree/main/packages/wpmjs"
     },
-    "homepage": "https://github.com/wpmjs/wpmjs/tree/main/wpmjs",
+    "homepage": "https://github.com/wpmjs/wpmjs/tree/main/packages/wpmjs",
     "files": [
         "doc",
         "dist",
