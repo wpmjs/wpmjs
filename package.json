@@ -1,0 +1,25 @@
+{
+  "name": "wpmjs-organization",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wpmjs/wpmjs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wpmjs/wpmjs/issues"
+  },
+  "homepage": "https://github.com/wpmjs/wpmjs#readme",
+  "workspaces": [
+    "packages/usemf",
+    "packages/wpmjs",
+    "packages/module-federation-semver",
+    "packages/dev-server-pool"
+  ]
+}

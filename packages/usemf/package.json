@@ -1,0 +1,33 @@
+{
+  "name": "usemf",
+  "version": "0.4.16",
+  "description": "import module federation and can override sharing",
+  "repository": "https://github.com/wpmjs/wpmjs/tree/main/usemf",
+  "keywords": [
+    "webpack",
+    "module-federation",
+    "systemjs"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src",
+    "doc"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "build": "webpack --mode production"
+  },
+  "devDependencies": {
+    "@babel/core": "7.16.0",
+    "@babel/plugin-transform-runtime": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "babel-loader": "^8.2.2",
+    "html-webpack-plugin": "^5.3.1",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^4.0.0"
+  },
+  "dependencies": {}
+}

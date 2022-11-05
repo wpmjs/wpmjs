@@ -1,1 +1,0 @@
-import("app2/App")
