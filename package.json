@@ -20,6 +20,8 @@
     "packages/usemf",
     "packages/wpmjs",
     "packages/module-federation-semver",
-    "packages/dev-server-pool"
+    "packages/dev-server-pool",
+    "packages/semverjs",
+    "packages/inject-webpack"
   ]
 }
