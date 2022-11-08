@@ -1,4 +1,4 @@
-## semverjs
+## semverhook
 
 1.5kb minimalist hook sdk
 
