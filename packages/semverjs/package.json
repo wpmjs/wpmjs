@@ -2,7 +2,7 @@
     "name": "semverjs",
     "version": "1.0.0",
     "author": "",
-    "description": "minimalist hook sdk",
+    "description": "1.5kb minimalist hook sdk",
     "keywords": [
         "systemjs",
         "umd",

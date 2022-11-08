@@ -14,7 +14,10 @@ module.exports = {
     path: path.resolve(__dirname, "./dist"),
     filename: "./index.js",
     chunkFilename: "[name]-[chunkhash].js",
-    libraryTarget: "umd"
+    library: {
+      name: "semverjs",
+      type: "umd"
+    }
   },
   module: {
     rules: [
