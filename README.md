@@ -5,9 +5,9 @@ Web Package Manager built with module-federation
 
 内容介绍:
 
-1. usemf
-2. @module-federation/webpack-4
+1. [usemf](./packages/usemf)
+2. [@module-federation/webpack-4](https://github.com/module-federation/webpack-4)
 3. dev-server-pool
-4. module-federation-semver
-5. semverjs
+4. [dynamic-remotes-plugin](./packages/dynamic-remotes-plugin)
+5. [semverhook](./packages/semverhook)
 6. inject-webpack
