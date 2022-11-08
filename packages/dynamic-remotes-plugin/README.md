@@ -1,7 +1,8 @@
-# external-remotes-plugin
+# dynamic-remotes-plugin
 
 **Host webpack.config**
 ```js
+const DynamicRemotesPlugin = require("dynamic-remotes-plugin")
 const config = {
    ...otherConfigs
   plugins: [
@@ -14,7 +15,7 @@ const config = {
         app3: "app3@^1.0.0?a=1"
       }
     }).
-    new ExternalTemplateRemotesPlugin({
+    new DynamicRemotesPlugin({
       resolvePath() {
         return `unpkg.com/${name}@${version}`
       },
@@ -37,7 +38,7 @@ plugins: [
         },
         shared: {...}
     }),
-    new ExternalTemplateRemotesPlugin(), //no parameter,
+    new DynamicRemotesPlugin(), //no parameter,
 ]
 ```
 

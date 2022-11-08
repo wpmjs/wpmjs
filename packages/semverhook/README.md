@@ -4,7 +4,7 @@
 
 ### API
 
-* semverjs = require("semverjs")()
+* semverhook = require("semverhook")()
 * import("id") : any | Promise<any>
 * resolve("id") : string
 * on("resolveRequest" || "resolvePath" || "import", function)
@@ -15,9 +15,9 @@
 #### 例子
 
 ``` js
-const semverjs = require("semverjs")()
+const semverhook = require("semverhook")()
 
-semverjs.on("resolveRequest", function (request) {
+semverhook.on("resolveRequest", function (request) {
     if (Math.random() > .5) {
       return {
         ...request,
@@ -27,8 +27,8 @@ semverjs.on("resolveRequest", function (request) {
     }
 })
 
-semverjs.on("resolvePath", function ({name, version, entry, query}) {
-  console.log(this === semverjs) // true
+semverhook.on("resolvePath", function ({name, version, entry, query}) {
+  console.log(this === semverhook) // true
   console.log(name) // "@scope/name"
   console.log(version) // "^1.0.3"
   console.log(entry) // "entry"
@@ -40,10 +40,10 @@ semverjs.on("resolvePath", function ({name, version, entry, query}) {
   return `https://unpkg.com/${name}${join("@", version)}${join("/", entry)}${join("?", query)}`
 })
 
-semverjs.on("import", function (url) {
-  console.log(this === semverjs) // true
+semverhook.on("import", function (url) {
+  console.log(this === semverhook) // true
   return systemjs.import(url)
 })
 
-semverjs.resolve("@scope/name@^1.0.3/entry?query=1") // https://unpkg.com/@scope/name@^1.0.3/entry?query=1
+semverhook.resolve("@scope/name@^1.0.3/entry?query=1") // https://unpkg.com/@scope/name@^1.0.3/entry?query=1
 ```

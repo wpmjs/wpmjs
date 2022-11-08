@@ -21,7 +21,7 @@
     "packages/wpmjs",
     "packages/module-federation-semver",
     "packages/dev-server-pool",
-    "packages/semverjs",
+    "packages/semverhook",
     "packages/inject-webpack"
   ]
 }

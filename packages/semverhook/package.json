@@ -1,6 +1,6 @@
 {
     "name": "semverhook",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": "",
     "description": "1.5kb minimalist hook sdk",
     "keywords": [
@@ -12,9 +12,9 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/wpmjs/wpmjs/tree/main/packages/semverjs"
+        "url": "https://github.com/wpmjs/wpmjs/tree/main/packages/semverhook"
     },
-    "homepage": "https://github.com/wpmjs/wpmjs/tree/main/packages/semverjs",
+    "homepage": "https://github.com/wpmjs/wpmjs/tree/main/packages/semverhook",
     "files": [
         "doc",
         "dist",
@@ -38,6 +38,5 @@
         "webpack-cli": "^4.7.2",
         "webpack-dev-server": "^4.0.0"
     },
-    "dependencies": {
-    }
+    "dependencies": {}
 }
