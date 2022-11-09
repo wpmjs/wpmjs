@@ -8,20 +8,22 @@ const stringifyHasFn = require("./utils/stringifyHasFn")
 class DynamicRemotesPlugin {
   constructor(options = {}) {
     this.options = options
+    this.appName = ""
   }
     apply(compiler) {
+      this.appName = this.getAppName(compiler.options.plugins)
       new inject(() => {
         return `
-          if (!window.$_mfplugin_semverhook) {
-            const options = ${stringifyHasFn(this.options)}
+          if (!window["$_mfplugin_semverhook_${this.appName}"]) {
+            var options = ${stringifyHasFn(this.options)}
             const semverhook = require("/Users/zhanghongen/Desktop/open-code/wpmjs/packages/semverhook/dist/index.js")()
-            window.$_mfplugin_semverhook = semverhook
+            window["$_mfplugin_semverhook_${this.appName}"] = semverhook
             if (options.resolvePath) {
               semverhook.on("resolvePath", (request) => {
                 return options.resolvePath(request)
               })
             }
-            ${this.options.inject ? this.options.inject() : ""}
+            ${this.options.inject ? this.options.inject(`window["$_mfplugin_semverhook_${this.appName}"]`) : ""}
           }
         `
       }).apply(compiler)
@@ -35,7 +37,7 @@ class DynamicRemotesPlugin {
               }
           });
 
-          compilation.hooks.afterCodeGeneration.tap(PLUGIN_NAME, function() {
+          compilation.hooks.afterCodeGeneration.tap(PLUGIN_NAME, () => {
               scriptExternalModules.map(module => {
                   const request = (module.request || "")
                   const url = request.split("@").slice(1)
@@ -47,7 +49,7 @@ class DynamicRemotesPlugin {
                     return
                   }
                   // "app0@latest" || "app0@^1.0.0?a=1"
-                  const urlExpression = toExpression(request);
+                  const urlExpression = `window["$_mfplugin_semverhook_${this.appName}"].resolve(${JSON.stringify(`${request}`)})`
                   const sourceMap = compilation.codeGenerationResults.get(module).sources;
                   const rawSource = sourceMap.get('javascript');
                   sourceMap.set(
@@ -58,10 +60,16 @@ class DynamicRemotesPlugin {
           });
       });
     }
-}
 
-function toExpression(request) {
-    return `window.$_mfplugin_semverhook.resolve(${JSON.stringify(`${request}`)})`
+    getAppName(plugins) {
+      const federationOptions = plugins.filter(
+        (plugin) => {
+          return plugin.constructor.name === 'ModuleFederationPlugin';
+        }
+      )[0]
+      const inheritedPluginOptions = federationOptions._options
+      return inheritedPluginOptions.name
+    }
 }
 
 module.exports = DynamicRemotesPlugin;

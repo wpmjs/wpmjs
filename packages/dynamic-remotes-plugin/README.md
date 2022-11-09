@@ -33,11 +33,11 @@ const config = {
       // This hook only takes effect in the browser
       // The following demonstrates how to use semverhook to proxy a package to the local
       // https://github.com/wpmjs/wpmjs/tree/main/packages/semverhook
-      inject() {
+      inject(semverhook) {
         return `
         // mock dev
         window.isDev = true
-        window.$_mfplugin_semverhook.on("resolvePath", request => {
+        ${semverhook}.on("resolvePath", request => {
           if (window.isDev && request.name === "app2") {
             return "https://localhost:3000/remoteEntry.js"
           }
