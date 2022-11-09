@@ -16,14 +16,16 @@ class InjectPlugin {
     //   // async 在所有异步chunk之前执行, 如果使用了module-federation, 此处代表bootstrap、exposes
     //   // scope: ["before", "initial", "async"]
     // }
+    this.injectCodeFn = code
     this.loaderId = ++loaderId
-    const virtualSemverPath = `${process.cwd()}/$_injectPlugin_${loaderId}.js`
-    injectArray.push(`;require(${JSON.stringify(virtualSemverPath)});`)
-    new VirtualPlugin({
-      [virtualSemverPath]: code
-    }).apply(compiler)
   }
     apply(compiler) {
+      const virtualSemverPath = `${process.cwd()}/$_injectPlugin_${this.loaderId}.js`
+      injectArray.push(() => `;require(${JSON.stringify(virtualSemverPath)});`)
+      new VirtualPlugin({
+        [virtualSemverPath]: this.injectCodeFn()
+      }).apply(compiler)
+
       this.addLoader(compiler)
       compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation) => {
         compilation.hooks.addEntry.tap(PLUGIN_NAME, (entry) => {

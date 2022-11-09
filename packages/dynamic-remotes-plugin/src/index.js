@@ -10,15 +10,18 @@ class DynamicRemotesPlugin {
     this.options = options
   }
     apply(compiler) {
-      new inject(function() {
+      new inject(() => {
         return `
           if (!window.$_mfplugin_semverhook) {
             const options = ${stringifyHasFn(this.options)}
             const semverhook = require("/Users/zhanghongen/Desktop/open-code/wpmjs/packages/semverhook/dist/index.js")()
             window.$_mfplugin_semverhook = semverhook
-            semverhook.on("resolvePath", (request) => {
-              return options.resolvePath(request)
-            })
+            if (options.resolvePath) {
+              semverhook.on("resolvePath", (request) => {
+                return options.resolvePath(request)
+              })
+            }
+            ${this.options.inject ? this.options.inject() : ""}
           }
         `
       }).apply(compiler)

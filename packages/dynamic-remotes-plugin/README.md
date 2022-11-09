@@ -1,5 +1,14 @@
 # dynamic-remotes-plugin
 
+[![npm](https://img.shields.io/npm/v/dynamic-remotes-plugin.svg)](https://www.npmjs.com/package/dynamic-remotes-plugin)
+
+Compatible with [external-remotes-plugin](https://github.com/module-federation/external-remotes-plugin) plugin API
+
+Provide hook, dynamic remote url
+
+* options.resolvePath is required
+* options.inject is not required
+
 **Host webpack.config**
 ```js
 const DynamicRemotesPlugin = require("dynamic-remotes-plugin")
@@ -9,48 +18,33 @@ const config = {
     new ModuleFederationPlugin({
       name: "app1",
       remotes: {
-        // not support @module-federation/typescript
-        app2: "app2@[window.app2Url]/remoteEntry.js",
-        // fixed format, support @module-federation/tyreadpescript
-        app3: "app3@^1.0.0?a=1"
+        app2: "app2@^1.0.0?a=1"
       }
     }).
     new DynamicRemotesPlugin({
+      // This hook will take effect on both the node side and the browser side
       resolvePath(request) {
         const {name, version, entry, query} = request
         function join(start, str) {
           return (str && `${start}${str}`) || ""
         }
         return `https://unpkg.com/${name}${join("@", version)}${join("/", entry)}/remoteEntry.js${join("?", query)}`
+      },
+      // This hook only takes effect in the browser
+      // The following demonstrates how to use semverhook to proxy a package to the local
+      // https://github.com/wpmjs/wpmjs/tree/main/packages/semverhook
+      inject() {
+        return `
+        // mock dev
+        window.isDev = true
+        window.$_mfplugin_semverhook.on("resolvePath", request => {
+          if (window.isDev && request.name === "app2") {
+            return "https://localhost:3000/remoteEntry.js"
+          }
+        })
+        `
       }
     }),
   ]
 }
 ```
-
-or
-
-```js
-plugins: [
-    new ModuleFederationPlugin({
-        name: 'my-app',
-        remotes: {
-            'my-remote-1': 'my-remote-1@[window.remote-1-domain]/remoteEntry.js?[getRandomString()]',
-            ...
-        },
-        shared: {...}
-    }),
-    new DynamicRemotesPlugin(), //no parameter,
-]
-```
-
-**Host (app1) source somewhere before loading main entry file**
-```js
-window.app2Url = "//localhost:3002"; // Whatever the url/logic to determine your remote module is
-
-import("./bootstrap");
-```
-
-Working example is also available in this PR: https://github.com/module-federation/module-federation-examples/pull/557.
-
-**Update:** the PR was merged a example can be found under [advanced-api/dynamic-remotes-synchronous-imports](https://github.com/module-federation/module-federation-examples/tree/d5cf265c2d4fd040797cbae806badd8267ad5b8f/advanced-api/dynamic-remotes-synchronous-imports)
