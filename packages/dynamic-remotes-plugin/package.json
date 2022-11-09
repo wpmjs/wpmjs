@@ -3,7 +3,7 @@
   "description": "module federation using semver syntax, Support for typescript plugins",
   "version": "0.1.2",
   "main": "src/index.js",
-  "repository": "git@github.com:wpmjs/wpmjs/dynamic-remotes-plugin.git",
+  "homepage": "https://github.com/wpmjs/wpmjs/tree/main/packages/dynamic-remotes-plugin",
   "license": "MIT",
   "dependencies": {
     "semverhook": "^1.0.0",
