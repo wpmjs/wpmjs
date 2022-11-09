@@ -1,21 +1,25 @@
 
 const { RawSource } = require('webpack-sources');
 const inject = require("./inject-webpack/src/index")
-const PLUGIN_NAME = 'ExternalTemplateRemotesPlugin';
+const PLUGIN_NAME = 'DynamicRemotesPlugin';
 const VirtualPlugin = require("webpack-virtual-modules")
 const resolveRequest = require("semverhook/src/utils/resolveRequest")
 const ExternalRemotesPlugin = require("external-remotes-plugin")
-
-class ExternalTemplateRemotesPlugin {
+const stringifyHasFn = require("./utils/stringifyHasFn")
+class DynamicRemotesPlugin {
+  constructor(options = {}) {
+    this.options = options
+  }
     apply(compiler) {
       const virtualSemverPath = `${process.cwd()}/$_mfplugin_virtualInitsemverhook.js`
       new VirtualPlugin({
         [virtualSemverPath]: `
           if (!window.$_mfplugin_semverhook) {
+            const options = ${stringifyHasFn(this.options)}
             const semverhook = require("/Users/zhanghongen/Desktop/open-code/wpmjs/packages/semverhook/dist/index.js")()
             window.$_mfplugin_semverhook = semverhook
             semverhook.on("resolvePath", (request) => {
-              return \`https://unpkg.com/\${request.name}@\${request.version}/remoteEntry.js\`
+              return options.resolvePath(request)
             })
           }
         `

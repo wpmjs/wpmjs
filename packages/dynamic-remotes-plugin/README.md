@@ -16,11 +16,13 @@ const config = {
       }
     }).
     new DynamicRemotesPlugin({
-      resolvePath() {
-        return `unpkg.com/${name}@${version}`
-      },
-      resolveEntry() {},
-      resolveQuery() {}
+      resolvePath(request) {
+        const {name, version, entry, query} = request
+        function join(start, str) {
+          return (str && `${start}${str}`) || ""
+        }
+        return `https://unpkg.com/${name}${join("@", version)}${join("/", entry)}/remoteEntry.js${join("?", query)}`
+      }
     }),
   ]
 }
