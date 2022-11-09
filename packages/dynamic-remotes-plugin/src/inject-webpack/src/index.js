@@ -3,7 +3,10 @@ const { entryResources, injectArray } = require('./entry-inject-loader');
 const getEntrysPath = require('./utils/getEntrysPath');
 const injectLoader = require('./utils/injectLoader');
 const entryInjectLoaderPath = require.resolve("./entry-inject-loader")
+const VirtualPlugin = require("webpack-virtual-modules")
 const PLUGIN_NAME = 'InjectPlugin';
+
+let loaderId = 0
 
 class InjectPlugin {
   constructor(code, options) {
@@ -13,7 +16,12 @@ class InjectPlugin {
     //   // async 在所有异步chunk之前执行, 如果使用了module-federation, 此处代表bootstrap、exposes
     //   // scope: ["before", "initial", "async"]
     // }
-    injectArray.push(code)
+    this.loaderId = ++loaderId
+    const virtualSemverPath = `${process.cwd()}/$_injectPlugin_${loaderId}.js`
+    injectArray.push(`;require(${JSON.stringify(virtualSemverPath)});`)
+    new VirtualPlugin({
+      [virtualSemverPath]: code
+    }).apply(compiler)
   }
     apply(compiler) {
       this.addLoader(compiler)

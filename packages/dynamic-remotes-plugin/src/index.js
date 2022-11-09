@@ -2,7 +2,6 @@
 const { RawSource } = require('webpack-sources');
 const inject = require("./inject-webpack/src/index")
 const PLUGIN_NAME = 'DynamicRemotesPlugin';
-const VirtualPlugin = require("webpack-virtual-modules")
 const resolveRequest = require("semverhook/src/utils/resolveRequest")
 const ExternalRemotesPlugin = require("external-remotes-plugin")
 const stringifyHasFn = require("./utils/stringifyHasFn")
@@ -11,9 +10,8 @@ class DynamicRemotesPlugin {
     this.options = options
   }
     apply(compiler) {
-      const virtualSemverPath = `${process.cwd()}/$_mfplugin_virtualInitsemverhook.js`
-      new VirtualPlugin({
-        [virtualSemverPath]: `
+      new inject(function() {
+        return `
           if (!window.$_mfplugin_semverhook) {
             const options = ${stringifyHasFn(this.options)}
             const semverhook = require("/Users/zhanghongen/Desktop/open-code/wpmjs/packages/semverhook/dist/index.js")()
@@ -22,11 +20,6 @@ class DynamicRemotesPlugin {
               return options.resolvePath(request)
             })
           }
-        `
-      }).apply(compiler)
-      new inject(function() {
-        return `
-          require(${JSON.stringify(virtualSemverPath)})
         `
       }).apply(compiler)
       new ExternalRemotesPlugin().apply(compiler)
@@ -68,4 +61,4 @@ function toExpression(request) {
     return `window.$_mfplugin_semverhook.resolve(${JSON.stringify(`${request}`)})`
 }
 
-module.exports = ExternalTemplateRemotesPlugin;
+module.exports = DynamicRemotesPlugin;
