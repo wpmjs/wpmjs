@@ -36,6 +36,7 @@ const config = {
       inject(semverhook) {
         return `
         // mock dev
+        window.isDev = true
         ${semverhook}.on("resolvePath", request => {
           if (window.isDev && request.name === "app2") {
             return "https://localhost:3000/remoteEntry.js"
