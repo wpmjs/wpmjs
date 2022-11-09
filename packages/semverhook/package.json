@@ -10,10 +10,6 @@
         "module federation",
         "webpack"
     ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/wpmjs/wpmjs/tree/main/packages/semverhook"
-    },
     "homepage": "https://github.com/wpmjs/wpmjs/tree/main/packages/semverhook",
     "files": [
         "doc",
