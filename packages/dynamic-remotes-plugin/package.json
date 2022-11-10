@@ -7,7 +7,8 @@
   "license": "MIT",
   "dependencies": {
     "semverhook": "^1.0.0",
-    "external-remotes-plugin": "1.0.0"
+    "external-remotes-plugin": "1.0.0",
+    "webpack-virtual-modules": "^0.4.6"
   },
   "peerDependencies": {
     "webpack": "^5"
