@@ -151,6 +151,30 @@ const obj = {
     }
     return loadModule()
   },
+  umdToMfContainer(id, {
+    deps = []
+  } = {}) {
+    return {
+      init() {
+        return 1
+      },
+      async get(moduleName) {
+        window.wpmjs.setConfig({
+          idDefineMap: {
+            [id]: {
+              remoteType: "umd",
+              deps
+            }
+          }
+        })
+        const entry = moduleName.replace("./", "")
+        const res = await window.wpmjs.import(id + (entry ? "/" + entry : ""))
+        return function () {
+          return res
+        }
+      }
+    }
+  },
   setConfig,
 }
 ;["resolveEntryFile", "resolvePath", "resolveQuery"].forEach(name => {
