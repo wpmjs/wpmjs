@@ -156,6 +156,7 @@ const obj = {
   } = {}) {
     return {
       init() {
+        // window.usemf.getShareScopes()
         return 1
       },
       async get(moduleName) {

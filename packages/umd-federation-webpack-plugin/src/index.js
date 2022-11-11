@@ -8,23 +8,18 @@ const stringifyHasFn = require("./utils/stringifyHasFn")
 class DynamicRemotesPlugin {
   constructor(options = {}) {
     this.options = options
-    this.appName = ""
+    this.mfOptions = null
   }
     apply(compiler) {
-      this.appName = this.getAppName(compiler.options.plugins)
+      this.mfOptions = this.getMFOptions()
       new inject(() => {
         return `
-          if (!window["$_mfplugin_semverhook_${this.appName}"]) {
-            var options = ${stringifyHasFn(this.options)}
-            const semverhook = require("semverhook")()
-            window["$_mfplugin_semverhook_${this.appName}"] = semverhook
-            if (options.resolvePath) {
-              semverhook.on("resolvePath", (request) => {
-                return options.resolvePath(request)
-              })
-            }
-            ${this.options.inject ? this.options.inject(`window["$_mfplugin_semverhook_${this.appName}"]`) : ""}
-          }
+          // require("wpmjs")
+          // window.wpmjs.setConfig({
+
+          // })
+          console.log(1111, window.usemf.getShareScopes(), __webpack_share_scopes__)
+          Object.assign(window.usemf.getShareScopes(), __webpack_share_scopes__)
         `
       }).apply(compiler)
       new ExternalRemotesPlugin().apply(compiler)
@@ -61,14 +56,14 @@ class DynamicRemotesPlugin {
       });
     }
 
-    getAppName(plugins) {
+    getMFOptions(plugins) {
       const federationOptions = plugins.filter(
         (plugin) => {
           return plugin.constructor.name === 'ModuleFederationPlugin';
         }
       )[0]
       const inheritedPluginOptions = federationOptions._options
-      return inheritedPluginOptions.name
+      return inheritedPluginOptions
     }
 }
 
