@@ -24,6 +24,7 @@
     "packages/semverhook",
     "packages/inject-webpack",
     "packages/umd-mf-webpack-plugin",
-    "packages/umd-federation-webpack-plugin"
+    "packages/umd-federation-webpack-plugin",
+    "packages/umfjs"
   ]
 }
