@@ -133,6 +133,10 @@ const obj = {
         if (entry && res[entry]?.__wpm__entry) {
           return res[entry]()
         }
+        if (entry) {
+          console.error(`entry "${entry}" not found from module:`, res)
+          throw new Error(`entry "${entry}" not found`)
+        }
       }
       return res
     })
@@ -151,31 +155,6 @@ const obj = {
     }
     return loadModule()
   },
-  umdToMfContainer(id, {
-    deps = []
-  } = {}) {
-    return {
-      init() {
-        // window.usemf.getShareScopes()
-        return 1
-      },
-      async get(moduleName) {
-        window.wpmjs.setConfig({
-          idDefineMap: {
-            [id]: {
-              remoteType: "umd",
-              deps
-            }
-          }
-        })
-        const entry = moduleName.replace("./", "")
-        const res = await window.wpmjs.import(id + (entry ? "/" + entry : ""))
-        return function () {
-          return res
-        }
-      }
-    }
-  },
   setConfig,
 }
 ;["resolveEntryFile", "resolvePath", "resolveQuery"].forEach(name => {
@@ -193,6 +172,8 @@ if (!window.System.__wpmjs__) {
    */
   window.wpmjs.init = obj.setConfig
   window.wpmjs.sync = obj.get
+
+  window.wpmjs = Object.assign((id) => window.wpmjs.import(id), window.wpmjs)
 }
 
 require("./utils/mapResolve")

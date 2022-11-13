@@ -34,12 +34,12 @@ export function getDepUrl(id, parentUrl = "") {
   const config = idDefineMap[getIdByUrl(parentUrl)]
   if (!config) return
   return config?.deps
-    .filter(item => {
+    ?.filter(item => {
       if (item === id || item.name === id) {
         return true
       }
     })
-    .map(item => getPkgUrl(typeof item === "string" ? item : item.target))
+    ?.map(item => getPkgUrl(typeof item === "string" ? item : item.target))
     ?.[0]
 }
 
