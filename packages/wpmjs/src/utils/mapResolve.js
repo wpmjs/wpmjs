@@ -4,7 +4,7 @@ const {
   idUrlMap,
   urlIdMap,
   idDefineMap,
-} = window.System.__wpmjs__
+} = window.__wpmjs__
 
 export function getConfig(id, request) {
   if (/^https?:\/\//.test(id)) {
@@ -66,11 +66,11 @@ export function getPkgUrl(id) {
     version: mapRequest.version || request.version,
     entry: mapRequest.entry || request.entry,
     query: mapRequest.query || request.query,
-    env: window.System.__wpmjs__.env
+    env: window.__wpmjs__.env
   }
-  return window.System.__wpmjs__.resolvePath(targetRequest) + 
-    window.System.__wpmjs__.resolveEntryFile(targetRequest) +
-    window.System.__wpmjs__.resolveQuery(targetRequest)
+  return window.__wpmjs__.resolvePath(targetRequest) + 
+    window.__wpmjs__.resolveEntryFile(targetRequest) +
+    window.__wpmjs__.resolveQuery(targetRequest)
 }
 
 const existingHook = System.constructor.prototype.resolve;

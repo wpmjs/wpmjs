@@ -1,6 +1,6 @@
 import { getIdByUrl } from "./mapResolve";
 
-const { idDefineMap } = window.System.__wpmjs__
+const { idDefineMap } = window.__wpmjs__
 
 const existingHook = System.constructor.prototype.getRegister;
 System.constructor.prototype.getRegister = function (url) {

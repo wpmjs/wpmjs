@@ -1,13 +1,9 @@
 ## Web Package Manager
 Web Package Manager built with module-federation
 
-此仓库提供了module-federation的上层应用能力, 目标是打造一个web版的npm
-
-内容介绍:
-
-1. [usemf](./packages/usemf)
+1. [usemf](https://github.com/wpmjs/usemf)
 2. [@module-federation/webpack-4](https://github.com/module-federation/webpack-4)
 3. dev-server-pool
-4. [dynamic-remotes-plugin](./packages/dynamic-remotes-plugin)
-5. [semverhook](./packages/semverhook)
-6. inject-webpack
+4. [dynamic-remotes](https://github.com/zhangHongEn/universal-module-federation-plugin/tree/main/packages/universal-module-federation-plugin#dynamic-remotes)
+5. [semverhook](https://github.com/wpmjs/usemf)
+6. [inject-webpack](https://github.com/zhangHongEn/inject-webpack)

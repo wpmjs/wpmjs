@@ -1,6 +1,7 @@
 const path = require("path")
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const HtmlPlugin = require("html-webpack-plugin")
+const {DefinePlugin} = require("webpack")
 
 module.exports = {
   entry: "./src/index.js",
@@ -31,7 +32,9 @@ module.exports = {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin(),
-    ...[process.env.NODE_ENV === "development" && new HtmlPlugin()].filter(item => item)
+    new DefinePlugin({
+      "process.env.NEED_SYSTEM": true
+    }),
+    ...[process.env.NODE_ENV === "development" && new HtmlPlugin()].filter(item => item),
   ]
 };

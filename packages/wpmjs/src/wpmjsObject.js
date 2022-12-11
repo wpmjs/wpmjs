@@ -104,14 +104,7 @@ const obj = {
     return fn()
   },
   resolvePath(request) {
-    throw new Error(`请实现resolvePath函数（ new ImportHttpPlugin({
-      init: {
-        resolvePath: function (request) {
-          // request[env、name、version、entry、query]
-          return url
-        }
-      }
-    }) ）`, request)
+    return ""
   },
   resolveEntryFile(request) {
     return ""
@@ -161,8 +154,8 @@ const obj = {
   obj[name].__wpm__defaultProp = true
 })
 
-if (!window.System.__wpmjs__) {
-  window.System.__wpmjs__ = obj
+if (!window.__wpmjs__) {
+  window.__wpmjs__ = obj
    /**
    * 放全局变量
    */
@@ -175,11 +168,6 @@ if (!window.System.__wpmjs__) {
 
   window.wpmjs = Object.assign((id) => window.wpmjs.import(id), window.wpmjs)
 }
-
-require("./utils/mapResolve")
-require("./utils/hackWebpackLibrary")
-require("./utils/addDeps")
-require("./utils/hackWebpackExportPromise")
 
 function setConfig(customConfig) {
   customConfig = customConfig || {}
