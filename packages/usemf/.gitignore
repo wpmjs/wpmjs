@@ -1,7 +1,0 @@
-# npm
-node_modules/
-package-lock.json
-dist
-yarn.lock
-# JetBrains
-.idea/
