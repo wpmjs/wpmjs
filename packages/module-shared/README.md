@@ -1,4 +1,4 @@
-## **module-shared优势**
+## **module-shared-pool优势**
 
 
 1. 支持多版本共存。
@@ -9,7 +9,7 @@
    一共只有两个API: setShared、getShared, 易于使用
 
    ```javascript
-   import {setShared, getShared} from "module-shared"
+   import {setShared, getShared} from "module-shared-pool"
    
      setShared({
        name: "lodash",
