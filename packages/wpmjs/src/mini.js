@@ -1,5 +1,3 @@
-require("./extras/json")
-require("./extras/system")
 require("./extras/mf")
 
 if (!window.wpmjs) {

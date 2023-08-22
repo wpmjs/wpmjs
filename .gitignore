@@ -5,3 +5,5 @@ dist
 package-lock.json
 /.idea
 yarn.lock
+weimob.js
+packages/wpmjs/test/test.js

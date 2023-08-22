@@ -1,21 +1,30 @@
 const path = require("path")
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const HtmlPlugin = require("html-webpack-plugin")
-const {DefinePlugin} = require("webpack")
 
 module.exports = {
-  entry: "./src/index.js",
-  resolve: {
-    extensions: ['.js', '.vue', '.ts', '.json'],
+  entry: {
+    index: "./src/index.js",
+    mini: "./src/mini.js",
+    test: "./test/test.js"
   },
+  externals: [
+    process.env.NODE_ENV === "production" && "module-federation-runtime"
+  ].filter(b => b),
   output: {
+    publicPath: "/",
     path: path.resolve(__dirname, "./dist"),
-    filename: "./index.js",
-    chunkFilename: "[name]-[chunkhash].js"
+    filename: "./[name].js",
+    chunkFilename: "[name]-[chunkhash].js",
+  },
+  devServer: {
+    open: true,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
   },
   module: {
     rules: [
-      { parser: { system: false } },
       {
         test: /\.m?jsx?$/,
         exclude: /node_modules/,
@@ -32,9 +41,7 @@ module.exports = {
     ]
   },
   plugins: [
-    new DefinePlugin({
-      "process.env.NEED_SYSTEM": true
-    }),
+    new CleanWebpackPlugin(),
     ...[process.env.NODE_ENV === "development" && new HtmlPlugin()].filter(item => item),
   ]
 };

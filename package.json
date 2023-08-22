@@ -17,14 +17,8 @@
   },
   "homepage": "https://github.com/wpmjs/wpmjs#readme",
   "workspaces": [
-    "packages/usemf",
     "packages/wpmjs",
-    "packages/module-federation-semver",
-    "packages/dev-server-pool",
-    "packages/semverhook",
-    "packages/inject-webpack",
-    "packages/umd-mf-webpack-plugin",
-    "packages/umd-federation-webpack-plugin",
-    "packages/umfjs"
+    "packages/systemjs-intercept",
+    "packages/module-shared-pool"
   ]
 }
