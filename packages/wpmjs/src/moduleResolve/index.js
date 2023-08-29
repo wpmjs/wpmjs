@@ -31,11 +31,15 @@ export function formatContainer(container, type) {
   container.$getEntry = async function(entry) {
     return resolveEntry(type, await container, entry)
   }
-  return container.then(res => {
-    res.$getEntry = async function(entry) {
-      return resolveEntry(type, await container, entry)
+  
+  return Promise.resolve(container).then(res => {
+    try {
+      res.$getEntry = async function(entry) {
+        return resolveEntry(type, await container, entry)
+      }
+    } catch (e) {
+      // 预防严格模式res是基础数据类型时无法赋值报错
     }
-    return res
   })
 }
 

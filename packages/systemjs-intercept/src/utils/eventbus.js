@@ -25,7 +25,7 @@ function off (eventName, cb) {
   }
 }
 
-export {
+module.exports = {
   on,
   off,
   emit

@@ -4,9 +4,10 @@
  * container 是一个包, 可以通过 await container.$getEntry("entry") 来获取包暴露的入口模块
  */
 
-// todo: 是否需要每个项目隔离版本
+// todo: 需要每个项目隔离版本, wpmjs = new Wpmjs()
 // todo: local面板
 // todo: setcache
+const _global = require("global")
 const localStorage = require('./utils/getLocalStorage').default
 const { SCOPE_ENUM, setCache, getCacheSync } = require('./utils/cacheUtil');
 const { config, sleep, addImportMap, setConfig } = require('./config');
@@ -62,7 +63,7 @@ function wimport(request) {
       throw new Error('包名不是字符串!');
     }
     if (/^https?:\/\//.test(request)) {
-      return System.import(request)
+      return _global.System.import(request)
     }
     // 每次返回一个新的promise, 避免使用处未处理promise链式返回值导致的bug
     return Promise.resolve().then(async _ => {
@@ -82,20 +83,26 @@ function wimport(request) {
       } else {
         url = resolveUrl(moduleType, requestObj);
       }
-      const container = getShared({
+      let container = getShared({
         name,
         requiredVersion: version || "*"
-      }) || resolveContainer(moduleType, url, {
-        request,
-        requestObj
       })
-      setShared({
-        name,
-        version,
-        get() {
-          return container
-        }
-      })
+      if (!container) {
+        container = (pkgConfig.global && _global[pkgConfig.global]) || 
+          resolveContainer(moduleType, url, {
+            request,
+            requestObj,
+            pkgConfig
+          })
+        setShared({
+          name,
+          version,
+          loaded: 1,
+          get() {
+            return container
+          }
+        })
+      }
       formatContainer(container, moduleType)
       if (!entry) {
         // 无需解析入口

@@ -12,19 +12,17 @@ import {
  * @returns 
  */
 export function setShared(pkg) {
+  let formatObj = Object.assign({}, pkg)
+  formatObj.get = function() {
+    return Promise.resolve(pkg.get())
+      .then(function(val) {
+        return function factory() {
+          return val
+        }
+      })
+  }
   return mfRegisterShared({
-    [pkg.name]: {
-      loaded: 1,
-      version: pkg.version,
-      get() {
-        return Promise.resolve(pkg.get())
-          .then(function(val) {
-            return function factory() {
-              return val
-            }
-          })
-      }
-    }
+    [pkg.name]: formatObj
   })
 }
 
@@ -37,7 +35,6 @@ export function getShared(shareConfig) {
   if (!shareConfig) shareConfig = {}
   Object.assign(shareConfig, {
     name: shareConfig.name,
-    singleton: true,
     requiredVersion: shareConfig.requiredVersion
   })
   var pkg = mfFindShared(shareConfig)

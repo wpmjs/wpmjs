@@ -2,7 +2,6 @@
 // import localStorage from './utils/getLocalStorage';
 // import parseURLQuery from './utils/parseURLQuery';
 
-// window.wpmjs.version = "3.1.0"
 // window.wpmjs.addImportMap({
 //   "wpm-develop-panel": {
 //     package: "wpm-develop-panel/index.js",

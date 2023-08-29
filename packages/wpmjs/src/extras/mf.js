@@ -23,16 +23,14 @@ export function resolveUrl({name, version, query, entry, filename, baseUrl}) {
   return `${baseUrl}/${name}${version}${filename}${query}`
 }
 
-export async function resolveContainer(url, {requestObj}) {
-  const global = nameToGlobal(requestObj.name)
+export async function resolveContainer(url, {requestObj, pkgConfig}) {
+  const global = pkgConfig.global || nameToGlobal(requestObj.name)
   await registerRemotes({
     [global]: {
       url
     }
-  }, async (url) => {
-    await window.System.import(url)
   })
-  return window[global]
+  return _global[global]
 }
 
 export function resolveEntry(container, entry) {

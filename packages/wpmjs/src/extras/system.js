@@ -1,12 +1,14 @@
 import { config } from "../config"
 import { registerLoader } from "../moduleResolve";
 
-require("systemjs-intercept")(function (dep) {
+const intercept = require("systemjs-intercept")
+var System = new window.System.constructor()
+var sysProto = {}
+Object.setPrototypeOf(System, Object.assign(sysProto, window.System.constructor.prototype))
+intercept(function (dep) {
   if (/https?:\/\//.test(dep)) return
   return window.wpmjs.import(dep)
-})
-
-require("../utils/hackSystemExportPromise")
+}, System)
 
 export const fileName = "index.js"
 registerLoader({
@@ -27,12 +29,12 @@ export function resolveUrl({name, version, query, entry, filename, baseUrl}) {
 }
 
 export function resolveContainer(url) {
-  return window.System.import(url);
+  return System.import(url);
 }
 
 export function resolveEntry(container, entry) {
   if (!entry) return container
-  if (typeof container[entry] === "function" && container[entry].__wpm__entry) {
+  if (typeof container[entry] === "function") {
     return container[entry]()
   }
   if (entry in container) {

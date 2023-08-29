@@ -5,39 +5,38 @@ if (!_global.System) {
   require("systemjs/dist/extras/global")
   require("systemjs/dist/extras/use-default")
 }
-var System = _global.System
-var sysProto = Object.getPrototypeOf(System)
-// Object.setPrototypeOf(System, Object.assign(sysProto, System.constructor.prototype))
+module.exports = function (cb, System) {
+  System = System || _global.System
+  var sysProto = Object.getPrototypeOf(System)
 
-const eventBus = System.$_intercept_event || require("./utils/eventbus")
-System.$_intercept_event = eventBus
+  var eventBus = System.$_intercept_event || require("./utils/eventbus")
+  System.$_intercept_event = eventBus
 
-// 这两处systemjs hook可以使用System.set替代, 但是set在s.js没有, 而system.js依赖的处理顺序有bug
-// const existingHookResolve = System.constructor.prototype.resolve;
-sysProto.resolve = function (url, parentUrl) {
-  const interceptUrl = `https://module-federation.virtual.com/$intercept/${url}`
-  return interceptUrl
-};
+  // 这两处systemjs hook可以使用System.set替代, 但是set在s.js没有, 而system.js依赖的处理顺序有bug
+  // const existingHookResolve = System.constructor.prototype.resolve;
+  sysProto.resolve = function (url, parentUrl) {
+    var interceptUrl = `https://module-federation.virtual.com/$intercept/${url}`
+    return interceptUrl
+  };
 
-const existingHookInstantiate = sysProto.instantiate;
-sysProto.instantiate = function (url) {
-  const oriUrl = url.replace(`https://module-federation.virtual.com/$intercept/`, "")
-  const depRes = eventBus.emit("importDep", [oriUrl])
-  if (depRes) {
-    return [[], function(_export, _context) {
-      return {
-        async execute() {
-          const res = await depRes
-          _export(res)
-        },
-        setters: []
-      }
-    }]
-  }
-  return existingHookInstantiate.call(this, oriUrl);
-};
-
-module.exports = function (cb) {
+  var existingHookInstantiate = sysProto.instantiate;
+  sysProto.instantiate = function (url) {
+    var oriUrl = url.replace(`https://module-federation.virtual.com/$intercept/`, "")
+    var depRes = eventBus.emit("importDep", [oriUrl])
+    if (depRes) {
+      return [[], function(_export, _context) {
+        return {
+          execute: function() {
+            return Promise.resolve(depRes).then(function(res) {
+              _export(res)
+            })
+          },
+          setters: []
+        }
+      }]
+    }
+    return existingHookInstantiate.call(this, oriUrl);
+  };
 
   eventBus.on("importDep", cb)
   return function() {

@@ -1,6 +1,6 @@
 {
-  "name": "@wpmjs/sdk",
-  "version": "1.0.0-beta.1",
+  "name": "wpmjs",
+  "version": "4.0.1",
   "author": "",
   "description": "a runtime loader that integrates multiple module specifications",
   "keywords": [
@@ -41,7 +41,7 @@
   "dependencies": {
     "lodash-es": "^4.17.21",
     "lodash.merge": "^4.6.2",
-    "module-shared-pool": "^1.0.0",
+    "module-shared-pool": "^1.0.2",
     "package-request-parse": "^1.0.1",
     "pre-get": "^1.0.7",
     "semverhook": "^1.2.0",

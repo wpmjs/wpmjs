@@ -1,6 +1,6 @@
 {
   "name": "systemjs-intercept",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "used to invade Systemjs and customize the behavior of obtaining dependencies",
   "main": "src/index.js",
   "scripts": {
@@ -10,5 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "systemjs": "^6.14.2"
-  }
+  },
+  "files": ["src"]
 }

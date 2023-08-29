@@ -1,6 +1,6 @@
 {
   "name": "module-shared-pool",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "author": "",
   "description": "",
   "keywords": [],
@@ -25,6 +25,6 @@
   },
   "types": "types",
   "dependencies": {
-    "module-federation-runtime": "^1.1.11"
+    "module-federation-runtime": "^1.1.13"
   }
 }
