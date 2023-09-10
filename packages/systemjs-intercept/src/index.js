@@ -12,16 +12,25 @@ module.exports = function (cb, System) {
   var eventBus = System.$_intercept_event || require("./utils/eventbus")
   System.$_intercept_event = eventBus
 
+  var tag = "https://module-federation.virtual.com/$intercept/"
   // 这两处systemjs hook可以使用System.set替代, 但是set在s.js没有, 而system.js依赖的处理顺序有bug
   // const existingHookResolve = System.constructor.prototype.resolve;
   sysProto.resolve = function (url, parentUrl) {
-    var interceptUrl = `https://module-federation.virtual.com/$intercept/${url}`
+    var interceptUrl = tag + url
     return interceptUrl
   };
 
+  var existingHookCreateContext = sysProto.createContext;
+  sysProto.createContext = function (url) {
+    var oriContext = existingHookCreateContext.call(this, url);
+    var newContext = Object.assign(oriContext)
+    newContext.url = oriContext.url.replace(tag, "")
+    return newContext
+  }
+
   var existingHookInstantiate = sysProto.instantiate;
   sysProto.instantiate = function (url) {
-    var oriUrl = url.replace(`https://module-federation.virtual.com/$intercept/`, "")
+    var oriUrl = url.replace(tag, "")
     var depRes = eventBus.emit("importDep", [oriUrl])
     if (depRes) {
       return [[], function(_export, _context) {

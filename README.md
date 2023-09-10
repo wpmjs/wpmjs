@@ -28,13 +28,9 @@
 
 ``` js
 wpmjs.setConfig({
-  baseUrl: "http://cdn.com/npm/",
+  baseUrl: "https://cdn.jsdelivr.net/npm",
   map: {
-    react: {
-      moduleType: "",
-      url: "",
-      npm: "",
-    }
+    react: "react/umd/react.development.js"
   }
 })
 
@@ -62,7 +58,7 @@ wpmPlugin({
       })
     }))
   },
-  baseUrl: "http://cdn.com/npm/",
+  baseUrl: "https://cdn.jsdelivr.net/npm",
   remotes: {
     react: "react@19.0.0/mf/remoteEntry.js",
     react: "react@19.0.0/mf/index.js",
