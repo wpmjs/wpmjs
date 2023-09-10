@@ -1,13 +1,15 @@
 import localStorage from "./utils/getLocalStorage";
 import requestParse from "package-request-parse"
 
-export const config = {
-  baseUrl: "",
-  defaultVersion: () => "latest",
-  defaultImportMap: (name) => {
+export default function Config() {
+  this.baseUrl =  ""
+  this.defaultVersion = () => "latest"
+  this.defaultImportMap = (name) => {
     throw new Error(`${name} not found importMap`)
-  },
-  importMap: {
+  }
+  this.defaultGlobal = function() {
+  }
+  this.importMap = {
     // moduleType,
     // package,
     // url,
@@ -16,18 +18,20 @@ export const config = {
     // packageQuery,
     // packageVersion,
     // packageFilename,
-  },
-  dev: localStorage.getItem('wpm-debug-open') == 1,
-  _sleepPromiseList: [],
-  _sleepPromiseAll: Promise.resolve(),
-};
+  }
+  this.dev = localStorage.getItem('wpm-debug-open') == 1
+  this._sleepPromiseList = []
+  this._sleepPromiseAll = Promise.resolve()
+  return this
+}
+const prototype = Config.prototype
 
 /**
  * 格式化config
  * @param {*} request string | obj
  * @returns 
  */
-export function requestFormatConfig(obj = "") {
+prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
   if (typeof obj === "string") {
     const request = obj
     const requestObj = requestParse(request)
@@ -43,6 +47,7 @@ export function requestFormatConfig(obj = "") {
       packageQuery: requestObj.query,
       packageVersion: requestObj.version,
       packageFilename: requestObj.entry,
+      strictVersion: requestObj.strictVersion || false
     }
   }
   let requestObj = {
@@ -67,6 +72,7 @@ export function requestFormatConfig(obj = "") {
     packageQuery: obj.packageName || requestObj.query,
     packageVersion: obj.packageVersion || requestObj.version,
     packageFilename: obj.packageFilename || requestObj.entry,
+    strictVersion: obj.strictVersion || false
   }
 }
 
@@ -77,9 +83,10 @@ export function requestFormatConfig(obj = "") {
  * addImportMap({react: {url: "http://xxxx.com/index.js"}})
  * @param {*} map 
  */
-export function addImportMap(map = {}) {
+prototype.addImportMap = function addImportMap(map = {}) {
+  const config = this
   Object.keys(map).forEach(pkgname => {
-    const newConfig = requestFormatConfig(map[pkgname])
+    const newConfig = this.requestFormatConfig(map[pkgname])
     const existingConfig = config.importMap[pkgname] || {}
     Object.keys(newConfig).forEach(newKey => {
       if (!existingConfig[newKey]) {
@@ -90,11 +97,12 @@ export function addImportMap(map = {}) {
   })
 }
 
-export function sleep(...promiseList) {
+prototype.sleep = function sleep(...promiseList) {
+  const config = this
   config._sleepPromiseList.push(...promiseList)
   config._sleepPromiseAll = Promise.all(config._sleepPromiseList)
 }
 
-export function setConfig(customConfig = {}) {
-  Object.assign(config, customConfig)
+prototype.setConfig = function setConfig(customConfig = {}) {
+  Object.assign(this, customConfig)
 }

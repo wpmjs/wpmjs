@@ -3,10 +3,11 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const HtmlPlugin = require("html-webpack-plugin")
 
 module.exports = {
-  entry: {
+  entry: process.env.NODE_ENV === "production" ? {
     index: "./src/index.js",
     mini: "./src/mini.js",
-    test: "./test/test.js"
+  }: {
+    test: "./test/test.js",
   },
   externals: [
     process.env.NODE_ENV === "production" && "module-federation-runtime"
@@ -16,6 +17,10 @@ module.exports = {
     path: path.resolve(__dirname, "./dist"),
     filename: "./[name].js",
     chunkFilename: "[name]-[chunkhash].js",
+    library: {
+      name: "WPMJS",
+      type: "umd"
+    }
   },
   devServer: {
     open: true,

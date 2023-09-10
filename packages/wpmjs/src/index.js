@@ -1,10 +1,10 @@
+if (!window.wpmjs) {
+  const Wpmjs = require("./wpmjs")
+  window.wpmjs = new Wpmjs()
+}
 require("./extras/json")
 require("./extras/system")
 require("./extras/mf")
-
-if (!window.wpmjs) {
-  window.wpmjs = require("./wpmjs")
-}
 
 require("./debugMode")
 

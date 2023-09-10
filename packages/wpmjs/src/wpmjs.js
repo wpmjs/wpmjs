@@ -4,18 +4,19 @@
  * container 是一个包, 可以通过 await container.$getEntry("entry") 来获取包暴露的入口模块
  */
 
-// todo: 需要每个项目隔离版本, wpmjs = new Wpmjs()
-// todo: local面板
-// todo: setcache
+// 待办todo: local面板
+// 待办todo: 如有需要, 将^18.0.2改为18.999.999, 将18.2改为18.2.999
+// 待办todo: universal使用wpmjs
+// 待办todo: 多例register
 const _global = require("global")
 const localStorage = require('./utils/getLocalStorage').default
-const { SCOPE_ENUM, setCache, getCacheSync } = require('./utils/cacheUtil');
-const { config, sleep, addImportMap, setConfig } = require('./config');
+const { default: Config } = require('./config');
 const { resolveUrl, resolveEntry, formatContainer, resolveContainer, registerLoader } = require('./moduleResolve');
 const {setShared, getShared} = require("module-shared-pool");
 const { default: parseRequest } = require('package-request-parse');
+const CacheUtil = require("./utils/CacheUtil")
 
-function resolveRequest(request, type) {
+function resolveRequest(request, config) {
   if (/^https?:\/\//.test(request)) {
     return request
   }
@@ -28,7 +29,7 @@ function resolveRequest(request, type) {
   if (!name) {
     throw new Error(`【'${request}】请求格式不正确（https://wpm.hsmob.com/assets/wpm-docs/API-SDK.html#wpmjs-import）`)
   }
-  const pkgConfig = getPkgConfig(name)
+  const pkgConfig = getPkgConfig(name, config)
   let requestObj = {
     name: pkgConfig.packageName || name,
     version: pkgConfig.packageVersion || version || config.defaultVersion(name),
@@ -41,12 +42,12 @@ function resolveRequest(request, type) {
 }
 
 function wimportSync(request) {
-  return getCacheSync("requestCache", request)
+  return this.cacheUtil.getCacheSync(request)
 }
 
-function getPkgConfig(name) {
+function getPkgConfig(name, config) {
   if (!config.importMap[name]?.packageName || !config.importMap[name]?.moduleType) {
-    addImportMap({
+    config.addImportMap({
       [name]: config.defaultImportMap(name)
     })
   }
@@ -58,18 +59,18 @@ function getPkgConfig(name) {
 }
 
 function wimport(request) {
-  return setCache("requestCache", request, () => {
+  return this.cacheUtil.setCache(request, () => {
     if (typeof request !== 'string') {
       throw new Error('包名不是字符串!');
     }
-    if (/^https?:\/\//.test(request)) {
-      return _global.System.import(request)
-    }
+    // if (/^https?:\/\//.test(request)) {
+    //   return _global.System.import(request)
+    // }
     // 每次返回一个新的promise, 避免使用处未处理promise链式返回值导致的bug
     return Promise.resolve().then(async _ => {
-      await config._sleepPromiseAll
-      const pkgConfig = getPkgConfig(parseRequest(request).name)
-      let requestObj = resolveRequest(request)
+      await this.config._sleepPromiseAll
+      const pkgConfig = getPkgConfig(parseRequest(request).name, this.config)
+      let requestObj = resolveRequest(request, this.config)
       const {
         entry,
         name,
@@ -83,12 +84,17 @@ function wimport(request) {
       } else {
         url = resolveUrl(moduleType, requestObj);
       }
-      let container = getShared({
-        name,
-        requiredVersion: version || "*"
-      })
+      let container = null
+      try {
+        container = getShared({
+          name,
+          requiredVersion: version || "*",
+          strictVersion: pkgConfig.strictVersion
+        })
+      } catch(e) {}
       if (!container) {
-        container = (pkgConfig.global && _global[pkgConfig.global]) || 
+        const globalKey = pkgConfig.global || this.config.defaultGlobal(requestObj)
+        container = (globalKey && _global[globalKey]) || 
           resolveContainer(moduleType, url, {
             request,
             requestObj,
@@ -114,15 +120,26 @@ function wimport(request) {
   })
 }
 
-const wpmjs = {
-  sleep,
-  setConfig,
-  addImportMap,
-  registerLoader,
-  getConfig: () => config,
-  import: wimport,
-  get: wimportSync,
+function Wpmjs() {
+  this.config = new Config()
+  this.cacheUtil = new CacheUtil()
+  return this
 }
+const proto = Wpmjs.prototype
+proto.sleep = function(promise) {
+  return this.config.sleep(promise)
+}
+proto.setConfig = function(config) {
+  return this.config.setConfig(config)
+}
+proto.addImportMap = function(config) {
+  return this.config.addImportMap(config)
+}
+proto.registerLoader = registerLoader
+proto.getConfig = function() {
+  return this.config
+}
+proto.import = wimport
+proto.get = wimportSync
 
-wpmjs.v = "4.0.0"
-module.exports = wpmjs;
+module.exports = Wpmjs;

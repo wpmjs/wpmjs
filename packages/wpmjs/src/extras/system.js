@@ -1,13 +1,18 @@
 import { config } from "../config"
 import { registerLoader } from "../moduleResolve";
+import {initSharing} from "module-federation-runtime"
+const inheritPrototype = require("../utils/inheritPrototype")
 
 const intercept = require("systemjs-intercept")
-var System = new window.System.constructor()
-var sysProto = {}
-Object.setPrototypeOf(System, Object.assign(sysProto, window.System.constructor.prototype))
+function SystemClone(...params) {
+  window.System.constructor.apply(this, params)
+}
+inheritPrototype(SystemClone, window.System.constructor)
+var System = window.wpmjs.System || new SystemClone()
+window.wpmjs.System = System
 intercept(function (dep) {
   if (/https?:\/\//.test(dep)) return
-  return window.wpmjs.import(dep)
+  return initSharing("default").then(() => window.wpmjs.import(dep))
 }, System)
 
 export const fileName = "index.js"

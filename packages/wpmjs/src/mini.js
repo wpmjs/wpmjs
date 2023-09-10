@@ -1,8 +1,8 @@
-require("./extras/mf")
-
 if (!window.wpmjs) {
-  window.wpmjs = require("./wpmjs")
+  const Wpmjs = require("./wpmjs")
+  window.wpmjs = new Wpmjs()
 }
+require("./extras/mf")
 
 require("./debugMode")
 
