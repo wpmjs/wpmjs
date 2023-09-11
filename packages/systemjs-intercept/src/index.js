@@ -3,7 +3,6 @@ if (!_global.System) {
   require("systemjs/dist/s")
   require("systemjs/dist/extras/amd")
   require("systemjs/dist/extras/global")
-  require("systemjs/dist/extras/use-default")
 }
 module.exports = function (cb, System) {
   System = System || _global.System

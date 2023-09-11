@@ -1,4 +1,3 @@
-import localStorage from "./utils/getLocalStorage";
 import requestParse from "package-request-parse"
 
 export default function Config() {
@@ -35,10 +34,7 @@ prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
   if (typeof obj === "string") {
     const request = obj
     const requestObj = requestParse(request)
-    let autoModuleType = ""
-    if (requestObj.entry) {
-      autoModuleType = requestObj.entry.indexOf("remoteEntry.js") > -1 ? "mf" : "system"
-    }
+    let autoModuleType = requestObj.entry.indexOf("remoteEntry.js") > -1 ? "mf" : "system"
     return {
       moduleType: autoModuleType,
       package: request,

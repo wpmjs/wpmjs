@@ -8,8 +8,9 @@
 // 待办todo: 如有需要, 将^18.0.2改为18.999.999, 将18.2改为18.2.999
 // 待办todo: universal使用wpmjs
 // 待办todo: 多例register
+// 跨iframe localsto
+// todo: baseUrl /结尾
 const _global = require("global")
-const localStorage = require('./utils/getLocalStorage').default
 const { default: Config } = require('./config');
 const { resolveUrl, resolveEntry, formatContainer, resolveContainer, registerLoader } = require('./moduleResolve');
 const {setShared, getShared} = require("module-shared-pool");
