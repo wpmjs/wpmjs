@@ -1,10 +1,10 @@
-// require("../../wpmjs/dist/index.js")
-import React from 'react';
+
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 import DevelopPanel from './DevelopPanel';
-import './WpmPkg';
 
-function main() {
+
+function main(config) {
 
 	if (!localStorage.getItem("wpm-debug-url")) {
 		localStorage.setItem("wpm-debug-url", 'http://localhost:9120')
@@ -15,9 +15,18 @@ function main() {
 	el.id = 'wpmjs-dev-panel';
 
 	document.body.appendChild(el);
-	ReactDOM.render(<DevelopPanel />, el);
+	ReactDOM.render(<DevelopPanel {...config} />, el);
 }
 
-if(!document.getElementById('wpmjs-dev-panel')) {
-	main()
+export default async function init(config = {}){
+	if(!document.getElementById('wpmjs-dev-panel')) {
+		const {
+			plugins = ["connect", "alias"],
+			baseUrl = ""
+		} = config
+		main({
+			plugins,
+			baseUrl
+		})
+	}
 }

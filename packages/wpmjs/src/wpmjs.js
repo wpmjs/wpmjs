@@ -10,12 +10,18 @@
 // 待办todo: 多例register
 // 跨iframe localsto
 // todo: baseUrl /结尾
+// todo: debugMode改为每个实例都执行
+// todo: 文档怎么找包路径 截图 https://unpkg.com/antd@4.24.14/dist/antd.min.js
+// todo: addImap package不必填优化
+// todo: config支持shareScope
+// todo: 注入初始debugCode钩子, hmr插件
 const _global = require("global")
 const { default: Config } = require('./config');
 const { resolveUrl, resolveEntry, formatContainer, resolveContainer, registerLoader } = require('./moduleResolve');
 const {setShared, getShared} = require("module-shared-pool");
 const { default: parseRequest } = require('package-request-parse');
-const CacheUtil = require("./utils/CacheUtil")
+const CacheUtil = require("./utils/CacheUtil");
+const { default: debugMode, loadPlugins } = require("./debugMode");
 
 function resolveRequest(request, config) {
   if (/^https?:\/\//.test(request)) {
@@ -83,7 +89,7 @@ function wimport(request) {
       if (url) {
         url += "/" + pkgConfig.packageFilename
       } else {
-        url = resolveUrl(moduleType, requestObj);
+        url = resolveUrl(moduleType, requestObj, this.loaderMap);
       }
       let container = null
       try {
@@ -100,7 +106,7 @@ function wimport(request) {
             request,
             requestObj,
             pkgConfig
-          })
+          }, this.loaderMap)
         setShared({
           name,
           version,
@@ -110,12 +116,12 @@ function wimport(request) {
           }
         })
       }
-      formatContainer(container, moduleType)
+      formatContainer(container, moduleType, this.loaderMap)
       if (!entry) {
         // 无需解析入口
         return container
       }
-      const entryRes = resolveEntry(moduleType, await container, entry)
+      const entryRes = resolveEntry(moduleType, await container, entry, this.loaderMap)
       return entryRes
     })
   })
@@ -124,8 +130,15 @@ function wimport(request) {
 function Wpmjs() {
   this.config = new Config()
   this.cacheUtil = new CacheUtil()
-  return this
+  this.loaderMap = {
+    // "moduleType": {moduleType, resolveUrl, resolveContainer, resolveEntry}
+  }
+  require("./extras/system").default(this)
+  require("./extras/mf").default(this)
+  require("./extras/json").default(this)
+  require("./debugMode").default(this)
 }
+
 const proto = Wpmjs.prototype
 proto.sleep = function(promise) {
   return this.config.sleep(promise)
@@ -136,10 +149,11 @@ proto.setConfig = function(config) {
 proto.addImportMap = function(config) {
   return this.config.addImportMap(config)
 }
-proto.registerLoader = registerLoader
+proto.registerLoader = function(obj) {registerLoader(obj, this.loaderMap)}
 proto.getConfig = function() {
   return this.config
 }
+proto.loadPlugins = loadPlugins
 proto.import = wimport
 proto.get = wimportSync
 

@@ -1,10 +1,8 @@
-import React, {useEffect, useState, lazy, Suspense} from 'react';
+import React, {useEffect, useState, lazy, Suspense, useRef, useMemo} from 'react';
 import Tabs from 'antd/es/Tabs'; // 加载 JS
 import 'antd/es/Tabs/style/css'; // 加载 CSS
 import Button from 'antd/es/Button'; // 加载 JS
 import 'antd/es/Button/style/css'; // 加载 CSS
-import Icon from 'antd/es/Icon'; // 加载 JS
-import 'antd/es/Icon/style/css'; // 加载 CSS
 import Switch from 'antd/es/Switch'; // 加载 JS
 import 'antd/es/Switch/style/css'; // 加载 CSS
 import parseURLQuery from './parseURLQuery';
@@ -12,14 +10,6 @@ import './DevelopPanel.less';
 import {SettingTwoTone} from "@ant-design/icons"
 
 const { TabPane } = Tabs
-
-const PreviewComp = lazy(async () => window.wpmjs.import("cosmos-kraken-preview").then(e => e.default()))
-
-const AsyncPreviewComp = props => <Suspense fallback={<div>loading...</div>}>
-  <PreviewComp {...props} />
-</Suspense>
-
-// const AsyncPreviewComp = () => 111
 
 const queryMap = parseURLQuery();
 let ws = null
@@ -69,16 +59,39 @@ function getActiveMap() {
   }
 }
 
-// function Switch(props) {
-//   const {onChange, display} = props;
-//   return (
-//     <span
-//       className="wpm-switch"
-//       style={{position: "relative", top: 10, right: 5, background: display ? '#ccc' : '#2f2'}}
-//       onClick={() => onChange(display)}
-//     />
-//   )
-// }
+function panelHandleChange(activePkgMap) {
+  localStorage.setItem('wpm-activePkgMap', JSON.stringify(activePkgMap));
+  window.location.reload();
+}
+
+const LocalPanel = ({connectorList: pkgList}) => <div className="local-panel">
+<ul className="package-list">
+  {
+    pkgList.length ?
+      pkgList.map(item => {
+        const {name, url} = item;
+        return (
+          <PackageListItem
+            key={name}
+            name={name}
+            url={url}
+            display={!activePkgMap[name]}
+            onChange={display => {
+              panelHandleChange({...activePkgMap, [name]: display})
+            }}
+          />
+        )
+      })
+      : (
+        <div style={{textAlign: 'center', padding: 20, color: '#aaa'}}>
+          <div>暂无wpm调试项目</div>
+          {/*<div style={{color:'red'}}>未如期出现调试包，请更新wpm-webpack-plugin</div>*/}
+          {/*<div style={{color:'red'}}>【改用socket传输】</div>*/}
+        </div>
+      )
+  }
+</ul>
+</div> 
 
 function ArouseButton(props) {
   return (
@@ -106,17 +119,12 @@ function PackageListItem(props) {
   )
 }
 
-function EditMap() {
-  return (
-    <div>切换版本</div>
-  )
-}
-
 function Panel(props) {
+  const {pluginComponents} = props
   const storageShowPanel = localStorage.getItem("wpm-dev-panel-default-show")
   const queryParamShowPanel = queryMap["defaultPlugin"]
   console.log("storage value: ", storageShowPanel, queryParamShowPanel)
-  const {onAdd, onPackUp, onChange, onClose, activePkgMap, pkgList} = props;
+  const {onPackUp, onClose, activePkgMap, pkgList} = props;
 
   const [curShowPanel, setCurShowPanel] = useState(storageShowPanel || queryParamShowPanel || "local")
 
@@ -126,36 +134,6 @@ function Panel(props) {
     setCurShowPanel(type)
   }
 
-
-  const LocalPanel = () => <div className="local-panel">
-  <ul className="package-list">
-    {
-      pkgList.length ?
-        pkgList.map(item => {
-          const {name, url} = item;
-          return (
-            <PackageListItem
-              key={name}
-              name={name}
-              url={url}
-              display={!activePkgMap[name]}
-              onChange={display => {
-                onChange({...activePkgMap, [name]: display})
-              }}
-            />
-          )
-        })
-        : (
-          <div style={{textAlign: 'center', padding: 20, color: '#aaa'}}>
-            <div>暂无wpm调试项目</div>
-            {/*<div style={{color:'red'}}>未如期出现调试包，请更新wpm-webpack-plugin</div>*/}
-            {/*<div style={{color:'red'}}>【改用socket传输】</div>*/}
-          </div>
-        )
-    }
-  </ul>
-  </div> 
-
   return (
     <div className="panel">
       <Tabs
@@ -163,25 +141,54 @@ function Panel(props) {
         activeKey={curShowPanel}
         onChange={ key => switchPanelType(key) }
       >
-        <TabPane tab="connect" key="connect">
-          <LocalPanel />
-        </TabPane>
-        {/* <TabPane tab="preview" key="preview">
-          <AsyncPreviewComp connectorList={pkgList} localStorage={localStorage} />
-        </TabPane> */}
+        {
+        pluginComponents.map(({key, Component}) => {
+          return (<TabPane tab={key} key={key}>
+            <Component connectorList={pkgList} />
+          </TabPane>)
+        })
+        }
       </Tabs>
       <div className="panel-foot">
         <Button className="refresh-button" type="link" onClick={onClose}>退出</Button>
-        {/* <Button className="refresh-button" type="link" onClick={onAdd}>配置</Button> */}
         <Button className="pack-up-button" type="link" onClick={onPackUp}>收起</Button>
       </div>
     </div>
   )
 }
 
-function Main() {
+function Main(props) {
+  const {plugins, baseUrl} = props
+
+  const pluginComponents = useMemo(function() {
+    return plugins.map(key => {
+      if (key === "connect") {
+        return {
+          key,
+          Component: LocalPanel
+        }
+      }
+      const pkg = `wpm-develop-${key}`
+      window.wpmjsDebug.addImportMap({
+        [pkg]: {
+          packageName: pkg,
+          moduleType: "system",
+          packageFilename: "dist/index.js",
+        }
+      })
+      const PreviewComp = lazy(() => window.wpmjsDebug.import(pkg))
+  
+      const AsyncPreviewComp = props => <Suspense fallback={<div>loading...</div>}>
+        <PreviewComp {...props} />
+      </Suspense>
+      return {
+        key,
+        Component: AsyncPreviewComp
+      }
+    })
+  }, [plugins])
+  
   const [display, setDisplay] = useState(true);
-  const [count, setCount] = useState(1);
 
   const wpmDebugURL = localStorage.getItem('wpm-debug-url');
   const [pkgList, setPkgList] = useState(JSON.parse(localStorage.getItem('wpm-pkgList')) || []);
@@ -221,15 +228,6 @@ function Main() {
   //     console.error(`${wpmDebugURL}下没有启动任何WPM项目`);
   //   }
   // }
-
-  let prevTimeoutId = null
-
-  function panelHandleChange(activePkgMap) {
-    localStorage.setItem('wpm-activePkgMap', JSON.stringify(activePkgMap));
-    setCount(count + 1);
-    clearTimeout(prevTimeoutId)
-    window.location.reload();
-  }
 
   function handleClose() {
     const keys = Object.keys(queryMap).filter(k => k !== 'wpmDebug');
@@ -281,37 +279,26 @@ function Main() {
     // }, 5000)
     initWS()
   }, []);
-
   return (
     <div className="wpmjs-develop-panel">
       <div className={ `root ${display ? 'panel-show' : 'panel-hidden'}` }>
       {
         display
           ? <Panel
+            pluginComponents={pluginComponents}
             activePkgMap={activePkgMap}
             pkgList={pkgList}
             onPackUp={() => setDisplay(false)}
-            onChange={panelHandleChange}
             onClose={handleClose}
-            onAdd={() => {
-              const res = prompt("请配置包版本（添加配置: vue@latest; 删除配置: vue）", "")
-              const {name} = getPkgInfo(res)
-              const map = {
-                ...getDebugMap(),
-                [name]: res
-              }
-              if (name === res) {
-                delete map[name]
-              }
-              localStorage.setItem("wpm-debug-map", JSON.stringify(map))
-              askLatestList()
-            }}
           />
           : <ArouseButton onClick={() => setDisplay(true)}/>
       }
     </div>
     </div>
   )
+}
+Main.defaultProps = {
+  plugins: []
 }
 
 export default Main;

@@ -1,32 +1,30 @@
-var eventMap = {
+function EventBus() {
+  // this
   // [eventName]: listeners
 }
+var proto = EventBus.prototype
 
-function emit(eventName, args) {
-  var listeners = eventMap[eventName] || []
+proto.emit = function emit(eventName, args) {
+  var listeners = this[eventName] || []
   var result
   for (var index = 0; index < listeners.length; index++) {
     result = listeners[index].apply(undefined, args) || result;
   }
   return result
 }
-function on (eventName, cb) {
-  if (!eventMap[eventName]) {
-    eventMap[eventName] = []
+proto.on = function on (eventName, cb) {
+  if (!this[eventName]) {
+    this[eventName] = []
   }
-  eventMap[eventName].push(cb)
+  this[eventName].push(cb)
 }
 
-function off (eventName, cb) {
-  if (!eventMap[eventName]) return
-  var eventIndex = eventMap[eventName].indexOf(cb)
+proto.off = function off (eventName, cb) {
+  if (!this[eventName]) return
+  var eventIndex = this[eventName].indexOf(cb)
   if (eventIndex > -1) {
-    eventMap[eventName].splice(eventIndex, 1)
+    this[eventName].splice(eventIndex, 1)
   }
 }
 
-module.exports = {
-  on,
-  off,
-  emit
-}
+module.exports = EventBus

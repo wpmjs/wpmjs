@@ -5,7 +5,6 @@ const HtmlPlugin = require("html-webpack-plugin")
 module.exports = {
   entry: process.env.NODE_ENV === "production" ? {
     index: "./src/index.js",
-    mini: "./src/mini.js",
   }: {
     test: "./test/test.js",
   },

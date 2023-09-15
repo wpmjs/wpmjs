@@ -1,6 +1,6 @@
 {
-  "name": "wpm-develop-panel",
-  "version": "1.0.7",
+  "name": "wpm-develop-alias",
+  "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -35,10 +35,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
     "antd": "^4.24.14",
-    "module-federation-runtime": "^1.1.15",
-    "module-shared-pool": "^1.0.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "wpm-develop-alias": "^1.0.0"
+    "react-dom": "^18.2.0"
   }
 }

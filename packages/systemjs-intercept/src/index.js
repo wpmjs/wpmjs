@@ -3,12 +3,14 @@ if (!_global.System) {
   require("systemjs/dist/s")
   require("systemjs/dist/extras/amd")
   require("systemjs/dist/extras/global")
+  require("systemjs/dist/extras/use-default")
 }
 module.exports = function (cb, System) {
   System = System || _global.System
   var sysProto = Object.getPrototypeOf(System)
 
-  var eventBus = System.$_intercept_event || require("./utils/eventbus")
+  const EventBus = require("./utils/eventbus")
+  var eventBus = System.$_intercept_event || new EventBus()
   System.$_intercept_event = eventBus
 
   var tag = "https://module-federation.virtual.com/$intercept/"

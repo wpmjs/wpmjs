@@ -1,6 +1,6 @@
 {
   "name": "wpmjs",
-  "version": "4.0.1-beta.1",
+  "version": "4.0.1-beta.2",
   "author": "",
   "description": "a runtime loader that integrates multiple module specifications",
   "keywords": [
@@ -47,7 +47,7 @@
     "pre-get": "^1.0.7",
     "semverhook": "^1.2.0",
     "systemjs": "^6.12.2",
-    "systemjs-intercept": "^1.0.9",
-    "wpm-develop-panel": "^1.0.5"
+    "systemjs-intercept": "^1.0.14",
+    "wpm-develop-panel": "^1.0.7"
   }
 }

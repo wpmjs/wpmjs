@@ -10,7 +10,7 @@ const webpackConfig = {
   target: "web",
   devServer: {
   //   // host: '0.0.0.0',
-    port: 8082,
+  //   port: 8080,
   //   https: true, // 加入这句即可
     headers: {'Access-Control-Allow-Origin': '*' },
   },

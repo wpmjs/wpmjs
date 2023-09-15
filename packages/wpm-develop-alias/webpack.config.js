@@ -9,7 +9,7 @@ const webpackConfig = {
     chunkFilename: "[name]-[chunkhash].js",
     library: {
       type: "umd",
-      name: "wpmDevelopPanel"
+      name: "wpmDevelopAlias"
     },
   },
   externals: ["react", "react-dom"],
