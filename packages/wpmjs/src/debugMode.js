@@ -157,7 +157,7 @@ export async function loadPlugins(config) {
       moduleType: "system",
       packageFilename: "dist/index.js",
       packageFilename: "index.js",
-      url: `http://localhost:8082`
+      // url: `http://localhost:8082`
     },
     "react-dom": "react-dom@18.2.0/umd/react-dom.development.js",
     "react": "react@18.2.0/umd/react.development.js",
