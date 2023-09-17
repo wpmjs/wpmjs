@@ -1,24 +1,26 @@
 import requestParse from "package-request-parse"
 
-export default function Config() {
-  this.baseUrl =  ""
-  this.defaultVersion = () => "latest"
-  this.defaultImportMap = (name) => {
-    throw new Error(`${name} not found importMap`)
+export default function Config(config = {}) {
+  this.name = config.name || ""
+  this.baseUrl =  config.baseUrl || ""
+  this.defaultVersion = config .defaultVersion || function(){return "latest"}
+  this.defaultImportMap = config.defaultImportMap || function(name) {
+    throw new Error(`config scope ${this.name}: ${name} not found importMap`)
   }
-  this.defaultGlobal = function() {
+  this.defaultGlobal = config.defaultGlobal || function() {
   }
-  this.importMap = {
+  this.importMap = config.importMap || {
     // moduleType,
     // package,
     // url,
     // global,
+    // shareScope,
     // packageName,
     // packageQuery,
     // packageVersion,
     // packageFilename,
   }
-  this.dev = localStorage.getItem('wpm-debug-open') == 1
+  this.dev = config.dev || localStorage.getItem('wpm-debug-open') == 1
   this._sleepPromiseList = []
   this._sleepPromiseAll = Promise.resolve()
   return this
@@ -65,7 +67,7 @@ prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
     url: obj.url,
     global: obj.global,
     packageName: obj.packageName || requestObj.name,
-    packageQuery: obj.packageName || requestObj.query,
+    packageQuery: obj.packageQuery || requestObj.query,
     packageVersion: obj.packageVersion || requestObj.version,
     packageFilename: obj.packageFilename || requestObj.entry,
     strictVersion: obj.strictVersion || false

@@ -9,12 +9,13 @@
 // 待办todo: universal使用wpmjs
 // 待办todo: 多例register
 // 跨iframe localsto
-// todo: baseUrl /结尾
+// todo: 优化baseUrl 非/结尾
 // todo: debugMode改为每个实例都执行
 // todo: 文档怎么找包路径 截图 https://unpkg.com/antd@4.24.14/dist/antd.min.js
 // todo: addImap package不必填优化
-// todo: config支持shareScope
 // todo: 注入初始debugCode钩子, hmr插件
+// todo: 修改module-shared-pool的 api factory可以暂不执行
+// todo: 每一个app的shared注册完成后, 
 const _global = require("global")
 const { default: Config } = require('./config');
 const { resolveUrl, resolveEntry, formatContainer, resolveContainer, registerLoader } = require('./moduleResolve');
@@ -95,6 +96,7 @@ function wimport(request) {
       try {
         container = getShared({
           name,
+          shareScope: pkgConfig.shareScope || "default",
           requiredVersion: version || "*",
           strictVersion: pkgConfig.strictVersion
         })
@@ -109,8 +111,10 @@ function wimport(request) {
           }, this.loaderMap)
         setShared({
           name,
+          shareScope: pkgConfig.shareScope || "default",
           version,
           loaded: 1,
+          from: this.config.name,
           get() {
             return container
           }
@@ -127,8 +131,8 @@ function wimport(request) {
   })
 }
 
-function Wpmjs() {
-  this.config = new Config()
+function Wpmjs({name} = {}) {
+  this.config = new Config({name})
   this.cacheUtil = new CacheUtil()
   this.loaderMap = {
     // "moduleType": {moduleType, resolveUrl, resolveContainer, resolveEntry}
@@ -156,5 +160,7 @@ proto.getConfig = function() {
 proto.loadPlugins = loadPlugins
 proto.import = wimport
 proto.get = wimportSync
+proto.setShared = setShared
+proto.getShared = getShared
 
 module.exports = Wpmjs;

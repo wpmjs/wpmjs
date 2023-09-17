@@ -1,12 +1,13 @@
 import {initSharing} from "module-federation-runtime"
+import global from "global"
 export default function (wpmjs) {
   const inheritPrototype = require("../utils/inheritPrototype")
   
   const intercept = require("systemjs-intercept")
   function SystemClone(...params) {
-    window.System.constructor.apply(this, params)
+    global.System.constructor.apply(this, params)
   }
-  inheritPrototype(SystemClone, window.System.constructor)
+  inheritPrototype(SystemClone, global.System.constructor)
   var System = new SystemClone()
   wpmjs.System = System
   intercept(function (dep) {

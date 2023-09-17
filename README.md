@@ -23,6 +23,8 @@
 9. qiankun需要设置global加publicPath
 10. 热更新指定方式
 11. 插件开发方式, 插件自动引入api实现, debug 参数实现
+12. wpm-develop-preview插件开发, 类似一个story book
+13. wpm-develop-panel可以拖动, 缓存折叠展开状态
 
 
 
@@ -66,7 +68,8 @@ wpmPlugin({
   debug: {
     plugins: [
       "connect",
-      "alias"
+      "alias",
+      "hmr"
     ]
   },
   remotes: {

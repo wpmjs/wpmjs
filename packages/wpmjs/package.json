@@ -41,7 +41,7 @@
   "dependencies": {
     "lodash-es": "^4.17.21",
     "lodash.merge": "^4.6.2",
-    "module-federation-runtime": "^1.1.15",
+    "module-federation-runtime": "^1.1.17",
     "module-shared-pool": "^1.0.2",
     "package-request-parse": "^1.0.1",
     "pre-get": "^1.0.7",

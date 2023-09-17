@@ -1,12 +1,12 @@
-if (!window.wpmjs) {
+const global = require("global")
+if (!global.wpmjs) {
   const Wpmjs = require("./wpmjs")
-  window.wpmjs = new Wpmjs()
-}
-
-if (process.env.NODE_ENV === "development") {
-  window.wpmjs.loadPlugins({
-    baseUrl: "https://cdn.jsdelivr.net/npm"
+  global.wpmjs = global.wpmjs || new Wpmjs({
+    name: "globalWpmjs"
   })
 }
+global.wpmjsDebug = global.wpmjsDebug || new global.wpmjs.constructor({
+  name: "globalWpmjsDebug"
+})
 
-module.exports = window.wpmjs
+module.exports = global.wpmjs
