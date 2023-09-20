@@ -17,13 +17,15 @@
 // todo: 修改module-shared-pool的 api factory可以暂不执行
 // todo: 每一个app的shared注册完成后, 
 // todo: 插件需要增加preload
+// todo: shared优先级提高来做热更新
+// todo: umdFederation插件使用module-federation-runtime重构
 const _global = require("global")
 const { default: Config } = require('./config');
 const { resolveUrl, resolveEntry, formatContainer, resolveContainer, registerLoader } = require('./moduleResolve');
 const {setShared, getShared} = require("module-shared-pool");
 const { default: parseRequest } = require('package-request-parse');
 const CacheUtil = require("./utils/CacheUtil");
-const { default: debugMode, loadPlugins } = require("./debugMode");
+const { debug } = require("./debugMode");
 
 function resolveRequest(request, config) {
   if (/^https?:\/\//.test(request)) {
@@ -158,7 +160,7 @@ proto.registerLoader = function(obj) {registerLoader(obj, this.loaderMap)}
 proto.getConfig = function() {
   return this.config
 }
-proto.loadPlugins = loadPlugins
+proto.debug = debug
 proto.import = wimport
 proto.get = wimportSync
 proto.setShared = setShared
