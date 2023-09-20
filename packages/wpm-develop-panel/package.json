@@ -1,6 +1,6 @@
 {
   "name": "wpm-develop-panel",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "",
   "main": "dist/index.js",
   "scripts": {

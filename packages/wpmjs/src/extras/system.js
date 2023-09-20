@@ -35,10 +35,8 @@ export default function (wpmjs) {
  function resolveContainer(url) {
     return System.import(url).then(res => {
       if (typeof res === "function") {
-        return {
-          __esModule: true,
-          default: res
-        }
+        res.__esModule = true
+        res.default = res
       }
       return res
     });

@@ -8,6 +8,7 @@ import 'antd/es/Input/style/css'; // 加载 CSS
 import "./index.css"
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import  parseRequest from 'package-request-parse'
+import localStorage from "./getLocalStorage"
 
 const formItemLayoutWithOutLabel = {
   wrapperCol: {

@@ -16,6 +16,7 @@
 // todo: 注入初始debugCode钩子, hmr插件
 // todo: 修改module-shared-pool的 api factory可以暂不执行
 // todo: 每一个app的shared注册完成后, 
+// todo: 插件需要增加preload
 const _global = require("global")
 const { default: Config } = require('./config');
 const { resolveUrl, resolveEntry, formatContainer, resolveContainer, registerLoader } = require('./moduleResolve');

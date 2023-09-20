@@ -2,7 +2,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import DevelopPanel from './DevelopPanel';
-
+import localStorage from './getLocalStorage';
 
 function main(config) {
 

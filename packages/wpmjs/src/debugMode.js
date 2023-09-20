@@ -1,4 +1,5 @@
 
+import localStorage from './utils/getLocalStorage';
 import parseURLQuery from './utils/parseURLQuery';
 import global from "global"
 const queryInfo = parseURLQuery();
@@ -156,11 +157,19 @@ export async function loadPlugins(config) {
       packageName: "wpm-develop-panel",
       moduleType: "system",
       packageFilename: "dist/index.js",
-      packageFilename: "index.js",
+      // packageFilename: "index.js",
       // url: `http://localhost:8082`
     },
     "react-dom": "react-dom@18.2.0/umd/react-dom.development.js",
     "react": "react@18.2.0/umd/react.development.js",
+  })
+  wpmjsDebug.addImportMap({
+    "react-dom": {
+      shareScope: "wpmjsDebug"
+    },
+    "react": {
+      shareScope: "wpmjsDebug"
+    }
   })
   const {default: init} = await wpmjsDebug.import("wpm-develop-panel")
   init(config)

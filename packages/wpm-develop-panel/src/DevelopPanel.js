@@ -8,6 +8,7 @@ import 'antd/es/Switch/style/css'; // 加载 CSS
 import parseURLQuery from './parseURLQuery';
 import './DevelopPanel.less';
 import {SettingTwoTone} from "@ant-design/icons"
+import localStorage from './getLocalStorage';
 
 const { TabPane } = Tabs
 

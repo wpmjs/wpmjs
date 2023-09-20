@@ -40,12 +40,13 @@ prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
     return {
       moduleType: autoModuleType,
       package: request,
-      url: "",
-      packageName: requestObj.name,
-      packageQuery: requestObj.query,
-      packageVersion: requestObj.version,
-      packageFilename: requestObj.entry,
-      strictVersion: requestObj.strictVersion || false
+      url: undefined,
+      packageName: requestObj.name || undefined,
+      packageQuery: requestObj.query || undefined,
+      packageVersion: requestObj.version || undefined,
+      packageFilename: requestObj.entry || undefined,
+      strictVersion: undefined,
+      shareScope: undefined
     }
   }
   let requestObj = {
@@ -57,7 +58,7 @@ prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
   if (obj.package) {
     requestObj = requestParse(obj.package)
   }
-  let autoModuleType = ""
+  let autoModuleType = undefined
   if (requestObj.entry) {
     autoModuleType = requestObj.entry.indexOf("remoteEntry.js") > -1 ? "mf" : "system"
   }
@@ -66,11 +67,12 @@ prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
     package: obj.package,
     url: obj.url,
     global: obj.global,
-    packageName: obj.packageName || requestObj.name,
-    packageQuery: obj.packageQuery || requestObj.query,
-    packageVersion: obj.packageVersion || requestObj.version,
-    packageFilename: obj.packageFilename || requestObj.entry,
-    strictVersion: obj.strictVersion || false
+    packageName: obj.packageName || requestObj.name || undefined,
+    packageQuery: obj.packageQuery || requestObj.query || undefined,
+    packageVersion: obj.packageVersion || requestObj.version || undefined,
+    packageFilename: obj.packageFilename || requestObj.entry || undefined,
+    strictVersion: obj.strictVersion,
+    shareScope: obj.shareScope,
   }
 }
 
@@ -87,7 +89,7 @@ prototype.addImportMap = function addImportMap(map = {}) {
     const newConfig = this.requestFormatConfig(map[pkgname])
     const existingConfig = config.importMap[pkgname] || {}
     Object.keys(newConfig).forEach(newKey => {
-      if (!existingConfig[newKey]) {
+      if (existingConfig[newKey] === undefined) {
         existingConfig[newKey] = newConfig[newKey]
       }
     })
