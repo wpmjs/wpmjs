@@ -63,6 +63,7 @@ prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
     autoModuleType = requestObj.entry.indexOf("remoteEntry.js") > -1 ? "mf" : "system"
   }
   return {
+    ...obj,
     moduleType: obj.moduleType || autoModuleType,
     package: obj.package,
     url: obj.url,

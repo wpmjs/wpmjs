@@ -93,7 +93,7 @@ function PackageListItem(props) {
 
 function Panel(props) {
   const {pluginComponents} = props
-  const storageShowPanel = localStorage.getItem("wpm-dev-panel-default-show")
+  const storageShowPanel = localStorage.getItem("wpm-dev-panel-default-show") || "connect"
   const queryParamShowPanel = queryMap["defaultPlugin"]
   console.log("storage value: ", storageShowPanel, queryParamShowPanel)
   const {onPackUp, onClose, pkgList} = props;
@@ -116,7 +116,7 @@ function Panel(props) {
         {
         pluginComponents.map(({key, Component}) => {
           return (<TabPane tab={key} key={key}>
-            <Component connectorList={pkgList} />
+            <Component connectorList={pkgList} localStorage={localStorage} />
           </TabPane>)
         })
         }

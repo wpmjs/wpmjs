@@ -19,6 +19,7 @@
   "workspaces": [
     "packages/wpmjs",
     "packages/systemjs-intercept",
-    "packages/module-shared-pool"
+    "packages/module-shared-pool",
+    "packages/wpm-webpack"
   ]
 }
