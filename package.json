@@ -15,11 +15,5 @@
   "bugs": {
     "url": "https://github.com/wpmjs/wpmjs/issues"
   },
-  "homepage": "https://github.com/wpmjs/wpmjs#readme",
-  "workspaces": [
-    "packages/wpmjs",
-    "packages/systemjs-intercept",
-    "packages/module-shared-pool",
-    "packages/wpm-webpack"
-  ]
+  "homepage": "https://github.com/wpmjs/wpmjs#readme"
 }

@@ -1,5 +1,5 @@
 {
-  "name": "wpm-develop-panel",
+  "name": "wpm-develop-hmr",
   "version": "1.0.7",
   "description": "",
   "main": "dist/index.js",

@@ -3,16 +3,16 @@ import requestParse from "package-request-parse"
 export default function Config(config = {}) {
   this.name = config.name || ""
   this.baseUrl =  config.baseUrl || ""
-  this.defaultVersion = config .defaultVersion || function(){return "latest"}
-  this.defaultImportMap = config.defaultImportMap || function(name) {
-    throw new Error(`config scope ${this.name}: ${name} not found importMap`)
-  }
+  this.defaultModuleType = config.defaultModuleType || function(){return "system"}
+  this.defaultVersion = config.defaultVersion || function(){return "latest"}
+  this.defaultImportMap = config.defaultImportMap || function(name) {}
   this.defaultGlobal = config.defaultGlobal || function() {
   }
   this.importMap = config.importMap || {
     // moduleType,
     // package,
     // url,
+    // debugUrl,
     // global,
     // shareScope,
     // packageName,
@@ -33,6 +33,19 @@ const prototype = Config.prototype
  * @returns 
  */
 prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
+  const [_, globalKey, url] = (typeof obj === "string" && obj.match(/([\w]+)\@(https?\:\/\/.*)/)) || []
+  if (url) {
+    return {
+      moduleType: "mf",
+      global: globalKey,
+      url,
+    }
+  }
+  if (/https?:\/\//.test(obj)) {
+    return {
+      url: obj,
+    }
+  }
   if (typeof obj === "string") {
     const request = obj
     const requestObj = requestParse(request)
@@ -41,6 +54,7 @@ prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
       moduleType: autoModuleType,
       package: request,
       url: undefined,
+      debugUrl: undefined,
       packageName: requestObj.name || undefined,
       packageQuery: requestObj.query || undefined,
       packageVersion: requestObj.version || undefined,
@@ -67,6 +81,7 @@ prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
     moduleType: obj.moduleType || autoModuleType,
     package: obj.package,
     url: obj.url,
+    debugUrl: obj.debugUrl,
     global: obj.global,
     packageName: obj.packageName || requestObj.name || undefined,
     packageQuery: obj.packageQuery || requestObj.query || undefined,
@@ -79,7 +94,7 @@ prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
 
 /**
  * 抢占注册机制
- * url、package、moduleType等不同的选项可以分多次注册, 但无法覆盖, 例:
+ * debugUrl、url、package、moduleType等不同的选项可以分多次注册, 但无法覆盖, 例:
  * addImportMap({react: {package: "react@0.0.1/index.js", moduleType: "system"}})
  * addImportMap({react: {url: "http://xxxx.com/index.js"}})
  * @param {*} map 
