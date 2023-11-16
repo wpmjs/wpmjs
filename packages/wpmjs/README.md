@@ -1,37 +1,37 @@
 ## wpmjs（web package manager）
 
-wpmjs是一个能够加载umd、system、module-federation并共享依赖的加载器, 支持自定义或扩展模块加载器、支持多版本共存, 还配套了调试插件和打包工具插件
+wpmjs is a loader that can load umd, system, module-federation and share dependencies, Supports custom or extended module loaders, supports multi-version coexistence, and is also equipped with debugging plug-ins and packaging tool plug-ins.
 
-> 默认使用[systemjs](npmjs.com/package/systemjs)和[module-federation-runtime](npmjs.com/package/module-federation-runtime)来加载各种模块, 也可以重新自行实现默认行为)
+> By default, [systemjs](https://npmjs.com/package/systemjs) and [module-federation-runtime](https://npmjs.com/package/module-federation-runtime) are used to load various modules, and you can also re-implement the default behavior yourself
 
 ## online demo
-[to experience](https://zhanghongen.github.io/universal-module-federation-plugin/), 下面的demo演示了使用 远程mf模块 + 远程umd模块 + 本地react模块
+[to experience](https://zhanghongen.github.io/universal-module-federation-plugin/), The following demo demonstrates the use of remote mf module + remote umd module + local react module
 > ``` js
 > import wpmjs from "wpmjs"
 > import React from "react"
 > 
 > wpmjs.setConfig({ baseUrl: "https://cdn.jsdelivr.net/npm" })
 > wpmjs.addImportMap({
->     // 统一域名
+>     // Unified domain name
 >     "antd": "antd@5.9.0/dist/antd.min.js",
 >     "dayjs": "dayjs@1.11.1",
->     // 自定义url
+>     // custom url
 >     "mf-app-01": "mfapp01@https://cdn.jsdelivr.net/npm/mf-app-01@1.0.5/dist/remoteEntry.js",
 >     "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"
 > })
-> // umd、system、mf都会优先寻找此处写入的依赖
+> // Umd, system, and mf will give priority to looking for dependencies written here.
 > wpmjs.setShared({ name: "react", version: "18.2.0", get: () => React })
 > 
 > await wpmjs.import("mf-app-01")
 > await wpmjs.import("antd")
 > wpmjs.get("react")
 
-### develop-plugins（调试插件）
-develop-plugins是一个可扩展的调试面板（[开发调试插件](./doc/develop-plugin.md)）, 系统插件connect和alias可以提供一键切换本地dev-server和调试指定版本的能力。
+### develop-plugins
+develop-plugins is an extensible debugging panel（[Contribute new develop-plugin](./doc/develop-plugin.md)）, The system plug-ins connect and alias can provide the ability to switch local dev-server and debug specified versions with one click.
 ![](assets/17000385880541.jpg)
 
-### 构建工具
-使用同步语法加载远程模块
+### Build tools
+Load remote modules using synchronous syntax, [npm-federation](https://github.com/zhangHongEn/universal-module-federation-plugin/tree/main/packages/npm-federation-webpack)
 ``` js
 // bootstrap.js
 import React from "react" // react is remote module
@@ -45,35 +45,24 @@ new NpmFederation({
   shared: {react: {}}
 })
 ```
-1. [npm-federation](https://github.com/zhangHongEn/universal-module-federation-plugin/tree/main/packages/npm-federation-webpack)
-2. [wpm-plugin](../wpm-plugin)
 
-### 扩展加载器
-修改默认加载器或开发新加载器请看API: registerLoader() 部分
-
-<!--* 基于npm和module-federation的版本化远程模块管理器
-
-## 特性
-* 多模块规范（集成了system、umd、module-federation等模块规范）
-* 调试模式/热更新（集成了调试面板与热更新, 可以自动连接本地启动的dev-server）
-* 版本化管理（可以使用私有或公共npm作为远程模块存储源, 也可以自定义url拼接规则自行存储远程模块）
-* 远程锁（支持动态配置远程模块的版本）
-* 性能优化（插件自动化优化多个远程模块及其chunk的加载链路, 避免多次加载的等待）-->
+### extension loader
+To modify the default loader or develop a new loader, please see the API: registerLoader() section
 
 
 ## API
 ### setConfig()
 ``` ts
 wpmjs.setConfig({
-  baseUrl: string; // 统一url
-  defaultModuleType(name): string; // 加载未设置moduleType的模块时使用的模块类型
-  defaultVersion(name: string): string; // 加载未设置packageVersion的模块时使用的版本
-  defaultImportMap(name: string): Map; // 详看addImportMap
-  defaultGlobal({name, version}): string; // 加载未设置global的模块时使用的key
+  baseUrl: string; // unified url
+  defaultModuleType(name): string; // The module type used when loading a module where moduleType is not set
+  defaultVersion(name: string): string; // The version used when loading modules without packageVersion set
+  defaultImportMap(name: string): Map; // See addImportMap for details
+  defaultGlobal({name, version}): string; // The key used when loading modules without global set
 })
 ```
-全局配置
-1. 注意, 这个demo并不是wpmjs的默认值
+Global configuration
+1. Note that this demo is not the default value of wpmjs
     ``` js
     wpmjs.setConfig({
       baseUrl: "https://cdn.jsdelivr.net/npm/",
@@ -88,97 +77,97 @@ wpmjs.setConfig({
 ``` ts
 wpmjs.addImportMap({
   [key: string]: string | {
-    url?: string; // 自定义url
-    global?: string; // global的变量名
-    moduleType?: string; // 模块类型
-    packageName?: string; // 包名, 会用作统一url规则的拼接
-    packageQuery?: string; // 查询参数, 会用作统一url规则的拼接 
-    packageVersion?: string; // 包版本, 会用作统一url规则的拼接
-    packageFilename?: string; // 包入口文件, 会用作同意url规则的拼接
-    strictVersion?: boolean; // 获取到的共享模块与指定版本不符则会发起请求加载指定版本
-    shareScope?: string; // 寻找依赖的空间
+    url?: string; // custom url
+    global?: string; // global variable name
+    moduleType?: string; // module type
+    packageName?: string; // The package name will be used to splice unified URL rules.
+    packageQuery?: string; // Query parameters will be used to splice unified url rules
+    packageVersion?: string; // Package version, will be used for splicing of unified url rules
+    packageFilename?: string; // Package entry file, will be used for splicing to agree with url rules
+    strictVersion?: boolean; // If the obtained shared module does not match the specified version, a request will be initiated to load the specified version.
+    shareScope?: string; // Looking for dependency space
   }
 })
 ```
-配置模块映射, 多个属性可分多次配置, 每个属性以第一次注册为准, 多次注册不会产生覆盖。其中如果有不规则的远程模块链接可以设置url属性, 否则推荐通过packageName、packageVersion等属性统一管理远程模块的链接。
-1. 字符串简写语法: 通过url映射umd和mf模块
-    1. global@https?://开头的设置为mf
+Configuration module mapping, multiple attributes can be configured multiple times, Each attribute is subject to the first registration. Multiple registrations will not cause overwriting. If there are irregular remote module links, you can set the url attribute, Otherwise, it is recommended to uniformly manage the links of remote modules through attributes such as packageName and packageVersion.。
+1. String shorthand syntax: mapping umd and mf modules through url
+    1. global@https?://The starting setting is mf
         ``` js
         wpmjs.addImportMap({
-            // 等同于配置: {moduleType: "mf", global, url}
+            // Equivalent to configuration: {moduleType: "mf", global, url}
             "mf-app-01": "mfapp01@https://cdn.jsdelivr.net/npm/mf-app-01@1.0.5/dist/remoteEntry.js",
         })
         ```
-    2. https?://开头的设置为system
+    2. https?://The setting at the beginning is system
         ``` js
         wpmjs.addImportMap({
             // 等同于配置: {moduleType: "system", url}
             "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"
         })
         ```
-2. 简写语法: 通过npm包名语法映射配置
-    1. 含有remoteEntry.js设置为mf
+2. Shorthand syntax: mapping configuration through npm package name syntax
+    1. Contains remoteEntry.js set to mf
         ``` js
         wpmjs.addImportMap({
-            // 等同于配置: {moduleType: "mf", packageName: "mf-app-01", packageVersion: "1.0.5", packageFilename: "dist/remoteEntry.js"}
+            // Equivalent to configuration: {moduleType: "mf", packageName: "mf-app-01", packageVersion: "1.0.5", packageFilename: "dist/remoteEntry.js"}
             "mf-app-01": "mf-app-01@1.0.5/dist/remoteEntry.js"
         })
         ```
-    2. 无remoteEntry.js设置为system
+    2. No remoteEntry.js is set to system
         ``` js
         wpmjs.addImportMap({
-            // 等同于配置: {moduleType: "system", packageName: "react-dom", packageFilename: "dist/umd/react-dom.development.js"}
+            // Equivalent to configuration: {moduleType: "system", packageName: "react-dom", packageFilename: "dist/umd/react-dom.development.js"}
             "react-dom": "react-dom/umd/react-dom.development.js",
         })
         ```
-    3. 无filename不设置moduleType
+    3. No filename does not set moduleType
         ``` js
         wpmjs.addImportMap({
-             // 等同于配置: {packageName: "react", packageVersion: "18.2.0"}
+             // Equivalent to configuration: {packageName: "react", packageVersion: "18.2.0"}
             "react": "react@18.2.0"
         })
         ```
-3. 对象语法: 可以分多次分别设置{moduleType, global, packageName, packageQuery, packageVersion, packageFilename, strictVersion, shareScope } 。 以第一次设置的属性为准
-    1. 单独设置包版本
+3. Object syntax: {moduleType, global, packageName, packageQuery, packageVersion, packageFilename, strictVersion, shareScope} can be set multiple times. The properties set for the first time shall prevail.
+    1. Set package version individually
         ``` js
         wpmjs.addImportMap({ "react": {packageVersion: "18.2.0", moduleType: "system"}, "react-dom": { packageVersion: "18.2.0" } })
-        // react-dom会使用18.2.0版本而不是17.0.2
+        // react-dom will use version 18.2.0 instead of 17.0.2
         wpmjs.addImportMap({ "react": "react", "react-dom": "react-dom@17.0.2/umd/react-dom.development.js" })
         ```
 ### import()
 ``` ts
 import(request: string): Promise<Module | any>
 ```
-加载并获取远程模块, 会自动缓存不进行多次请求, request可以是一个模块名, 也可以是一个模块+入口路径名
-1. 直接加载某个入口, 结果等同于2
+Load and obtain the remote module, it will be automatically cached and will not make multiple requests. The request can be a module name, or a module + entry path name.
+1. Directly load an entry, the result is equal to 2
 ``` js
 const entry = await wpmjs.import("mf-app-01/App")
 ```
-2. 只加载某个模块, 不加载具体的入口
+2. Only load a certain module, not the specific entry
 ``` js
 const module = wpmjs.import("mf-app-01")
-// 需要的时候再加载入口./App
+// Load the entrance when needed./App
 const entry = await container.$getEntry("./App")
 ```
-> 对应写法2, 入参是一个模块名不包含入口路径的时候, 会为返回值挂载$getEntry来抹平各种类型的模块获取入口的方式。wpmjs为每种模块提供了默认的入口解析行为, 但你也可以进行自定义。
-> * umd或system模块: [wpmjs/src/extras/umdAndSystem.js](./src/extras/umdAndSystem.js) resolveEntry()
+> Corresponding to writing method 2, when the input parameter is a module name that does not include the entry path, $getEntry will be mounted for the return value to smooth the way for various types of modules to obtain entries. wpmjs provides default entry parsing behavior for each module, but you can also customize it.
+> * umd or system: [wpmjs/src/extras/umdAndSystem.js](./src/extras/umdAndSystem.js) resolveEntry()
 > ``` js
-> umdModule.$getEntry("App") ====内部逻辑等于==== await umdModule["App"]()
+> umdModule.$getEntry("App") ====The internal logic is equal to==== await umdModule["App"]()
 > ```
-> * module-federation模块: [wpmjs/src/extras/mf.js](./src/extras/mf.js)  resolveEntry()
+> * module-federation: [wpmjs/src/extras/mf.js](./src/extras/mf.js)  resolveEntry()
 > ``` js
-> mfModule.$getEntry("App") ====内部逻辑等于==== (await mfModule.get("App"))()
+> mfModule.$getEntry("App") ====The internal logic is equal to==== (await mfModule.get("App"))()
 > ```
-> * json模块: [wpmjs/src/extras/json.js](./src/extras/json.js)  resolveEntry()
+> * json: [wpmjs/src/extras/json.js](./src/extras/json.js)  resolveEntry()
 > ``` js
-> jsonModule.$getEntry("App") ====内部逻辑等于==== jsonModule["App"]
+> jsonModule.$getEntry("App") ====The internal logic is equal to==== jsonModule["App"]
 > ```
 
 ### get()
 ``` ts
 wpmjs.get(request: string): any
 ```
-从缓存中获取某个模块的同步值, 模块加载完毕前会获取到undefined
+Obtain the synchronization value of a module from the cache. Undefined will be obtained before the module is loaded.
 ``` js
 wpmjs.import("react")
 wpmjs.get("react") // undefined
@@ -188,11 +177,11 @@ wpmjs.get("react") // React
 ### setShared()
 ``` ts
 wpmjs.setShared({
-    // 模块名
+    // module name
     name: string,
-    // 模版版本
+    // module version
     version: string,
-    // 模块加载函数
+    // module loading function
     get: function(): Promise<any>;
     
     loaded?: boolean | number;
@@ -201,15 +190,15 @@ wpmjs.setShared({
     from?: string;
 })
 ```
-注册一个共享模块, 共享模块支持多版本共存, ***自动在umd、system、module-federation及其shared等各种模块之间进行共享和互通***
+Register a shared module. The shared module supports the coexistence of multiple versions. ***Automatically share and interoperate among various modules such as umd, system, module-federation and its shared***
 ``` js
 wpmjs.setShared({
   name: "react",
   version: "18.2.0",
   async get() {
-    // 可以去请求远程资源
+    // You can request remote resources
     return System.import("https://react.js")
-    // 也可返回本地对象
+    // Local objects can also be returned
     return {test: 1111}
   }
 })
@@ -224,14 +213,14 @@ wpmjs.getShared({
   requiredVersion?: string;
 }): Promise<any>
 ```
-加载共享模块
+Load shared modules
 ``` js
 await wpmjs.getShared({name: "react"})
 await wpmjs.getShared({name: "react", requiredVersion: "18.2.0", singleton: true})
 ```
 ### sleep()
-等待一段时间之后再发起加载请求
-1. 动态importMap
+Wait for a while before making a load request
+1. Dynamic importMap
 ``` js
 wpmjs.sleep(window.fetch("https://importMap.json").then(res => res.json())
   .then(importMap => {
@@ -244,12 +233,12 @@ await wpmjs.import("react") // 17.0.2
 ```
 
 ### constructor()
-创建新的wpmjs实例
-1. 多版本共存
+Create new wpmjs instance
+1. Coexistence of multiple versions
 ``` js
 const wpmjs = window.wpmjs
 const wpmjs1 = new wpmjs.constructor({
-  // 打印错误信息时会附带name
+  // Name will be appended when printing error message
   name: "wpmjs1"
 })
     
@@ -261,14 +250,14 @@ wpmjs1.import("react") // 17.0.2
 ```
 
 ### System
-使用[systemjs-intercept](npmjs.com/package/systemjs-intercept)拦截了加载过程的systemjs实例, 这个实例加载的模块及依赖会使用wpmjs来寻找
+Use [systemjs-intercept](https://npmjs.com/package/systemjs-intercept) to intercept the systemjs instance of the loading process. The modules and dependencies loaded by this instance will be found using wpmjs
 ``` js
 wpmjs.System.import("react-dom")
 ```
 
 ### registerLoader()
-注册新的模块类型与其加载器, 例:
-1. 创建一个css加载器
+Register a new module type and its loader, for example:
+1. Create a css loader
     ``` js
     wpmjs.registerLoader({
         moduleType: "css",
@@ -295,7 +284,7 @@ wpmjs.System.import("react-dom")
     wpmjs.addImportMap({ testCss: { packageName: "antd@0.0.1/dist/index.css", moduleType: "css" } })
     wpmjs.import("testCss")
     ```
-2. 自定义system模块的加载行为（如url规则、执行js的方式等）
+2. Customize the loading behavior of the system module (such as url rules, how to execute js, etc.)
     ``` js
     wpmjs.registerLoader({
         resolveUrl() {
@@ -314,11 +303,11 @@ wpmjs.System.import("react-dom")
 ### debug()
 ``` ts
 wpmjs.debug({
-    baseUrl: string; // develop-panel会需要用到一些远程npm包, 此处为它设置源
-    plugins: Array<string> // wpm-develop-panel是一个调试面板, 可以嵌入一些调试工具, 此处可以配置工具名, 会自动去加载wpm-develop-${plugins[index]}对应的npm包
+    baseUrl: string; // develop-panel will need some remote npm packages, set the source for it here
+    plugins: Array<string> // wpm-develop-panel is a debugging panel that can embed some debugging tools. You can configure the tool name here, and the npm package corresponding to wpm-develop-${plugins[index]} will be automatically loaded.
 })
 ```
-打开调试面板, 可以使用系统插件和自定义插件
+Open the debugging panel, you can use system plug-ins and custom plug-ins
 ``` js
 window.wpmjsDebug.debug({
     baseUrl: "https://cdn.jsdelivr.net/npm",
@@ -326,16 +315,16 @@ window.wpmjsDebug.debug({
 })
 ```
 
-## 贡献指南
-1. 补充单测（wpmjs sdk）
-4. vite插件、rspack插件（使用@module-federation/vite实现; 持续关注rspack最新mf动态）
-5. demo（各种demo仓库的建设）
-6. 文档（概念、教程、相关规范、性能优化原理与优势）
-7. 可以给webpack官方贡献性能优化的代码（详见chunkMap部分。https://github.com/module-federation/universe/discussions/1170）
-8. 浏览器插件（调试面板插件版本, 只需要读取ws, 设置localstorage）
-9. qiankun注意事项: qiankun需要设置global加publicPath
-10. 热更新指定方式
-11. 插件开发方式, 插件自动引入api实现, debug 参数实现
-12. wpm-develop-preview插件开发, 类似一个story book
-13. wpm-develop-panel可以拖动, 缓存折叠展开状态
+## Contribution Guidelines
+1. Supplementary single test (wpmjs sdk)
+4. Vite plug-in, rspack plug-in (implemented using @module-federation/vite; continue to pay attention to the latest mf news of rspack)
+5. demo (construction of various demo warehouses)
+6. Documentation (concepts, tutorials, related specifications, performance optimization principles and advantages)
+7. You can contribute performance optimization code to the official webpack (see the chunkMap section for details. https://github.com/module-federation/universe/discussions/1170)
+8. Browser plug-in (debug panel plug-in version, only need to read ws and set localstorage)
+9. Notes on qiankun: qiankun needs to set global plus publicPath
+10. Hot update specification method
+11. Plug-in development method, plug-in automatically introduces API implementation, debug parameter implementation
+12. wpm-develop-preview plug-in development, similar to a story book
+13. wpm-develop-panel can be dragged and the folded and expanded state is cached
 
