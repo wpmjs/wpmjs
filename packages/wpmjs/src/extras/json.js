@@ -15,9 +15,6 @@ export default function (wpmjs) {
    * @returns 
    */
   function resolveUrl({name, version, query, entry, filename, baseUrl}) {
-    if (/https?:\/\/(localhost|(\d+\.){2})/.test(baseUrl)) {
-      return `${baseUrl}/${filename}`
-    }
     query = query ? "?" + query : ""
     fileName = filename ? "/" + filename : ""
     version = version ? "@" + version : ""
