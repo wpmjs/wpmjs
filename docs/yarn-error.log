@@ -1,0 +1,52 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/bin/yarn
+
+PATH: 
+  /opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Users/zhenkunou/tools/flutter/bin:/Users/zhenkunou/Library/Android/sdk/tools:/Users/zhenkunou/Library/Android/sdk/platform-tools
+
+Yarn version: 
+  1.22.17
+
+Node version: 
+  18.19.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: http://npm.weimob.com/@algolia%2fclient-search/-/client-search-4.22.0.tgz: Request failed "500 Internal Server Error"
+      at ResponseError.ExtendableBuiltin (/usr/local/lib/node_modules/yarn/lib/cli.js:696:66)
+      at new ResponseError (/usr/local/lib/node_modules/yarn/lib/cli.js:802:124)
+      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:67099:16)
+      at Request.emit (node:events:517:28)
+      at module.exports.Request.onRequestResponse (/usr/local/lib/node_modules/yarn/lib/cli.js:141760:10)
+      at ClientRequest.emit (node:events:517:28)
+      at HTTPParser.parserOnIncomingClient (node:_http_client:700:27)
+      at HTTPParser.parserOnHeadersComplete (node:_http_common:119:17)
+      at Socket.socketOnData (node:_http_client:541:22)
+      at Socket.emit (node:events:517:28)
+
+npm manifest: 
+  {
+    "name": "wpmjs-docs",
+    "version": "1.0.0",
+    "main": "index.js",
+    "devDependencies": {
+      "vitepress": "1.0.0-rc.20"
+    },
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "docs:dev": "vitepress dev docs --port 3003",
+      "docs:build": "vitepress build docs",
+      "docs:preview": "vitepress preview docs --8080"
+    },
+    "author": "",
+    "license": "ISC",
+    "description": ""
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
