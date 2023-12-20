@@ -1,5 +1,8 @@
 ## wpmjs（web package manager）
 
+[![npm](https://img.shields.io/npm/v/wpmjs.svg)](https://www.npmjs.com/package/wpmjs)
+[中文文档](https://github.com/weimob-tech/wpmjs/blob/main/README.zh.md)
+
 wpmjs is a loader that can load umd, system, module-federation and share dependencies, Supports custom or extended module loaders, supports multi-version coexistence, and is also equipped with debugging plug-ins and packaging tool plug-ins.
 
 > By default, [systemjs](https://npmjs.com/package/systemjs) and [module-federation-runtime](https://npmjs.com/package/module-federation-runtime) are used to load various modules, and you can also re-implement the default behavior yourself
@@ -127,7 +130,7 @@ Configuration module mapping, multiple attributes can be configured multiple tim
             "react": "react@18.2.0"
         })
         ```
-3. Object syntax: {moduleType, global, packageName, packageQuery, packageVersion, packageFilename, strictVersion, shareScope} can be set multiple times. The properties set for the first time shall prevail.
+3. Object syntax: {moduleType, global, packageName, packageQuery, packageVersion, packageFilename, strictVersion, shareScope} can be set multiple times.
     1. Set package version individually
         ``` js
         wpmjs.addImportMap({ "react": {packageVersion: "18.2.0", moduleType: "system"}, "react-dom": { packageVersion: "18.2.0" } })
