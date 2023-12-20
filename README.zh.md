@@ -139,7 +139,7 @@ wpmjs.addImportMap({
             "react": "react@18.2.0"
         })
         ```
-3. 对象语法: 可以分多次分别设置{moduleType, global, packageName, packageQuery, packageVersion, packageFilename, strictVersion, shareScope } 。 以第一次设置的属性为准
+3. 对象语法: 可以分多次分别设置{moduleType, global, packageName, packageQuery, packageVersion, packageFilename, strictVersion, shareScope } 。
     1. 单独设置包版本
         ``` js
         wpmjs.addImportMap({ "react": {packageVersion: "18.2.0", moduleType: "system"}, "react-dom": { packageVersion: "18.2.0" } })

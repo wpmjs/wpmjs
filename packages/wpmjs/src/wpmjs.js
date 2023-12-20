@@ -73,8 +73,7 @@ function wimportWrapper(request) {
     //   return _global.System.import(request)
     // }
     // 每次返回一个新的promise, 避免使用处未处理promise链式返回值导致的bug
-    return Promise.resolve().then(async _ => {
-      await this.config._sleepPromiseAll
+    return Promise.resolve(this.config._sleepPromiseAll).then(async _ => {
       return wimport.call(this, request)
     })
   })

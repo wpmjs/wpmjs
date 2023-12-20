@@ -105,7 +105,8 @@ prototype.addImportMap = function addImportMap(map = {}) {
     const newConfig = this.requestFormatConfig(map[pkgname])
     const existingConfig = config.importMap[pkgname] || {}
     Object.keys(newConfig).forEach(newKey => {
-      if (existingConfig[newKey] === undefined) {
+      if (newConfig[newKey] !== undefined) {
+      // if (existingConfig[newKey] === undefined) {
         existingConfig[newKey] = newConfig[newKey]
       }
     })
@@ -117,6 +118,7 @@ prototype.sleep = function sleep(...promiseList) {
   const config = this
   config._sleepPromiseList.push(...promiseList)
   config._sleepPromiseAll = Promise.all(config._sleepPromiseList)
+  return config._sleepPromiseAll
 }
 
 prototype.setConfig = function setConfig(customConfig = {}) {
