@@ -63,7 +63,7 @@ function getPkgConfig(name, config) {
   // if (!config.importMap[name]) {
     const defaultConfig = config.defaultImportMap(name)
     if (defaultConfig) {
-      const config = config.importMap[name]
+      const config = config.importMap[name] || {}
       Object.keys(defaultConfig).forEach(key => {
         if (config[key] === undefined) {
           config[key] = defaultConfig[key]
