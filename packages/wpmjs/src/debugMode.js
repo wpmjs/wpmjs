@@ -1,52 +1,64 @@
 
 import localStorage from './utils/getLocalStorage';
-import parseURLQuery from './utils/parseURLQuery';
 import global from "global"
-const queryInfo = parseURLQuery();
 
-export default function (wpmjs) {
-  if (localStorage.getItem('wpm-debug-open') != 1) return
-  const wpmAlias = (function () {
-    try {
-      return JSON.parse(localStorage.getItem("wpm-alias")) || []
-    } catch (e) {
-      return {}
-    }
-  })()
-  const wpmPkgList = (function () {
-    try {
-      return JSON.parse(localStorage.getItem("wpm-pkgList")) || []
-    } catch (e) {
-      return []
-    }
-  })()
-  const wpmActivePkgMap = (function () {
-    try {
-      return JSON.parse(localStorage.getItem('wpm-activePkgMap')) || {}
-    } catch (e) {
-      return {}
-    }
-  })()
-  wpmPkgList.forEach(({name: pkg, url}) => {
-    if (!wpmActivePkgMap[pkg]) return
-    wpmjs.addImportMap({
-      [pkg]: {
-        url
-      }
-    })
-  })
-  wpmAlias.forEach(({source, target}) => {
-    wpmjs.addImportMap({
-      [source]: {
-        packageVersion: target
-      }
-    })
-  })
-  
+const debugImportMap = {}
+export const debugMode = localStorage.getItem('wpm-debug-open') == 1
+export function getDebugImportMap(name) {
+  try {
+    Object.assign(debugImportMap, JSON.parse(localStorage.getItem("wpm-debug-import-map")) || {})
+  } catch (e) {
+  }
+  return name ? debugImportMap[name] : debugImportMap
+}
+export function addDebugImportMap(name, config) {
+  debugImportMap[name] = config
+  localStorage.setItem("wpm-debug-import-map", JSON.stringify(debugImportMap))
 }
 
+// export default function (wpmjs) {
+//   if (!debugMode) return
+//   const wpmAlias = (function () {
+//     try {
+//       return JSON.parse(localStorage.getItem("wpm-alias")) || []
+//     } catch (e) {
+//       return {}
+//     }
+//   })()
+//   const wpmPkgList = (function () {
+//     try {
+//       return JSON.parse(localStorage.getItem("wpm-pkgList")) || []
+//     } catch (e) {
+//       return []
+//     }
+//   })()
+//   const wpmActivePkgMap = (function () {
+//     try {
+//       return JSON.parse(localStorage.getItem('wpm-activePkgMap')) || {}
+//     } catch (e) {
+//       return {}
+//     }
+//   })()
+//   wpmPkgList.forEach(({name: pkg, url}) => {
+//     if (!wpmActivePkgMap[pkg]) return
+//     wpmjs.addImportMap({
+//       [pkg]: {
+//         url
+//       }
+//     })
+//   })
+//   wpmAlias.forEach(({source, target}) => {
+//     wpmjs.addImportMap({
+//       [source]: {
+//         packageVersion: target
+//       }
+//     })
+//   })
+  
+// }
+
 export async function debug(config) {
-  if(localStorage.getItem('wpm-debug-open') != 1) {
+  if(!debugMode) {
     localStorage.setItem('wpm-debug-open', 1);
     setTimeout(() => {
       location.reload()

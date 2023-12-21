@@ -20,7 +20,7 @@ const { resolveUrl, resolveEntry, formatContainer, resolveContainer, registerLoa
 const {setShared, getShared} = require("module-shared-pool");
 const { default: parseRequest } = require('package-request-parse');
 const CacheUtil = require("./utils/CacheUtil");
-const { debug } = require("./debugMode");
+const { debug, debugMode, getDebugImportMap } = require("./debugMode");
 
 function resolveRequest(request, config, pkgConfig) {
   if (/^https?:\/\//.test(request)) {
@@ -51,15 +51,32 @@ function wimportSync(request) {
   return this.cacheUtil.getCacheSync(request)
 }
 
+/**
+ * 1. 将defaultImportMap补进importMap（不覆盖）
+ * 2. 将debugImportMap覆盖近importMap
+ * 3. 获取最终的importMap配置对象
+ * @param {*} name 
+ * @param {*} config 
+ * @returns 
+ */
 function getPkgConfig(name, config) {
   // if (!config.importMap[name]) {
-    const defaultImportMap = config.defaultImportMap(name)
-    if (defaultImportMap) {
-      config.addImportMap({
-        [name]: defaultImportMap
+    const defaultConfig = config.defaultImportMap(name)
+    if (defaultConfig) {
+      const config = config.importMap[name]
+      Object.keys(defaultConfig).forEach(key => {
+        if (config[key] === undefined) {
+          config[key] = defaultConfig[key]
+        }
       })
     }
   // }
+  if (debugMode && getDebugImportMap(name)) {
+    // todo: readme说明debugImportMap
+    config.addImportMap({
+      [name]: getDebugImportMap(name)
+    })
+  }
   const pkgConfig = config.importMap[name]
   return pkgConfig
 }
@@ -158,7 +175,6 @@ function Wpmjs({name} = {}) {
   require("./extras/umdAndSystem").default(this)
   require("./extras/mf").default(this)
   require("./extras/json").default(this)
-  require("./debugMode").default(this)
 }
 
 const proto = Wpmjs.prototype

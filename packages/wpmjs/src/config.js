@@ -3,6 +3,7 @@ import requestParse from "package-request-parse"
 export default function Config(config = {}) {
   this.name = config.name || ""
   this.baseUrl =  config.baseUrl || ""
+  // this.defaultAutoModuleType = config.defaultAutoModuleType
   this.defaultModuleType = config.defaultModuleType || function(){return "system"}
   this.defaultVersion = config.defaultVersion || function(){return "latest"}
   this.defaultImportMap = config.defaultImportMap || function(name) {}
