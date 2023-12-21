@@ -24,10 +24,18 @@ const formItemLayoutWithOutLabel = {
   },
 };
 const availablePropertys = ["url", "packageVersion", "package"]
+const debugImportMap = {}
+export function getDebugImportMap(name) {
+  try {
+    Object.assign(debugImportMap, JSON.parse(localStorage.getItem("wpm-debug-import-map")) || {})
+  } catch (e) {
+  }
+  return name ? debugImportMap[name] : debugImportMap
+}
 
 const wpmAlias = (function () {
   try {
-    const importMap = JSON.parse(localStorage.getItem("wpm-debug-import-map")) || {}
+    const importMap = getDebugImportMap()
     return Object.keys(importMap).map(name => {
       const config = importMap[name]
       const props = []
@@ -52,7 +60,7 @@ const initialValues = {
 }
 const App = () => {
   const onFinish = (values) => {
-    const importMap = {}
+    const importMap = getDebugImportMap()
     values.list.forEach(({name, prop, value}) => {
       importMap[name] = importMap[name] || {}
       importMap[name][prop] = value
