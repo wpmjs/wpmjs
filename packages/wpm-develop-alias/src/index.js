@@ -95,7 +95,7 @@ const App = () => {
                   />
                 </Form.Item>
                 <Form.Item name={[field.name, "prop"]} noStyle>
-                  <Select defaultValue={"packageVersion"} getPopupContainer={() => document.querySelector(".wpmjs-develop-alias")} style={{minWidth: 140}}>
+                  <Select getPopupContainer={() => document.querySelector(".wpmjs-develop-alias")} style={{minWidth: 140}}>
                     {availablePropertys.map((key, i) => {
                       return <Select.Option key={i} value={key}>{key}</Select.Option>
                     })} 
@@ -120,7 +120,7 @@ const App = () => {
             <div style={{display: "flex", marginTop: 10}}>
               <Button
                 type="dashed"
-                onClick={() => add()}
+                onClick={() => add({prop: "packageVersion"})}
                 icon={<PlusOutlined />}
               >
                 Add

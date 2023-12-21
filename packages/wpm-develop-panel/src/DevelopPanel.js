@@ -197,13 +197,6 @@ function Main(props) {
       try {
         const {type, list=[]} = JSON.parse(data);
         if (type === 'change'){
-          const wpmDebugMap = getDebugMap()
-          const mapList = Object.keys(wpmDebugMap).map(name => {
-            return {
-              name,
-              url: wpmDebugMap[name]
-            }
-          })
           localStorage.setItem('wpm-pkgList', JSON.stringify(list));
           updatePkgList()
         }
