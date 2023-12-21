@@ -12,14 +12,14 @@ function main(config) {
 
   const el = document.createElement('div');
 	
-	el.id = 'wpmjs-dev-panel';
+	el.id = 'wpmjs-develop-panel';
 
 	document.body.appendChild(el);
 	ReactDOM.render(<DevelopPanel {...config} />, el);
 }
 
 export default async function init(config = {}){
-	if(!document.getElementById('wpmjs-dev-panel')) {
+	if(!document.getElementById('wpmjs-develop-panel')) {
 		const {
 			plugins = ["connect", "alias"],
 			baseUrl = ""

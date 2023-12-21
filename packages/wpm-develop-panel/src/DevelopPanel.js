@@ -12,28 +12,29 @@ import localStorage from './getLocalStorage';
 
 const { TabPane } = Tabs
 
+const debugImportMap = {}
+export function getDebugImportMap(name) {
+  try {
+    Object.assign(debugImportMap, JSON.parse(localStorage.getItem("wpm-debug-import-map")) || {})
+  } catch (e) {
+  }
+  return name ? debugImportMap[name] : debugImportMap
+}
+
 const queryMap = parseURLQuery();
 let ws = null
 let wsConnected = false;
-const activePkgMap = function(){
-  try {
-    return JSON.parse(localStorage.getItem('wpm-activePkgMap')) || {}
-  } catch(e) {
-    return {}
-  }
-}()
 
-function getDebugMap() {
+function panelHandleChange(name, value) {
   try {
-    return JSON.parse(localStorage.getItem("wpm-debug-map") || "{}")
+    const importMap = getDebugImportMap()
+    importMap[name] = importMap[name] || {}
+    importMap[name].url = value
+    localStorage.setItem('wpm-debug-import-map', JSON.stringify(importMap));
+    window.location.reload();
   } catch (e) {
-    return {}
-  }
-}
 
-function panelHandleChange(activePkgMap) {
-  localStorage.setItem('wpm-activePkgMap', JSON.stringify(activePkgMap));
-  window.location.reload();
+  }
 }
 
 const LocalPanel = ({connectorList: pkgList}) => <div className="local-panel">
@@ -47,9 +48,9 @@ const LocalPanel = ({connectorList: pkgList}) => <div className="local-panel">
             key={name}
             name={name}
             url={url}
-            display={!activePkgMap[name]}
-            onChange={display => {
-              panelHandleChange({...activePkgMap, [name]: display})
+            checked={getDebugImportMap(name)?.url == url}
+            onChange={value => {
+              panelHandleChange(name, value ? url : undefined)
             }}
           />
         )
@@ -75,11 +76,11 @@ function ArouseButton(props) {
 }
 
 function PackageListItem(props) {
-  const {display, onChange, name, url} = props;
+  const {checked, onChange, name, url} = props;
   return (
     <li className="package-list-item">
       <div className='switch-area'>
-        <Switch size="small" checked={!display} onChange={onChange}/>
+        <Switch size="small" checked={checked} onChange={onChange}/>
         <span className='text'>
           {name}
         </span>
@@ -173,15 +174,8 @@ function Main(props) {
 
   const [pkgList, setPkgList] = useState(JSON.parse(localStorage.getItem('wpm-pkgList')) || []);
   function updatePkgList() {
-    const wpmDebugMap = getDebugMap()
     const list = JSON.parse(localStorage.getItem('wpm-pkgList'))
-    const mapList = Object.keys(wpmDebugMap).map(name => {
-      return {
-        name,
-        url: wpmDebugMap[name]
-      }
-    })
-    setPkgList([...list, ...mapList])
+    setPkgList([...list])
   }
 
   function handleClose() {
