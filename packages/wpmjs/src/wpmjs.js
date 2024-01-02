@@ -197,5 +197,9 @@ proto.import = wimportWrapper
 proto.get = wimportSync
 proto.setShared = setShared
 proto.getShared = getShared
+proto.getImportMap = function(name) {
+  if (!name) return this.config.importMap
+  return getPkgConfig(name, this.config)
+}
 
 module.exports = Wpmjs;
