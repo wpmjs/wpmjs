@@ -167,8 +167,8 @@ async function wimport(request) {
 }
 
 
-function Wpmjs({name} = {}) {
-  this.config = new Config({name})
+function Wpmjs({name, shareScope} = {}) {
+  this.config = new Config({name, shareScope})
   this.cacheUtil = new CacheUtil()
   this.loaderMap = {
     // "moduleType": {moduleType, resolveUrl, resolveContainer, resolveEntry}
