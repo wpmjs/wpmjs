@@ -6,7 +6,8 @@ if (!global.wpmjs) {
   })
 }
 global.wpmjsDebug = global.wpmjsDebug || new global.wpmjs.constructor({
-  name: "globalWpmjsDebug"
+  name: "globalWpmjsDebug",
+  shareScope: "wpmjsDebug"
 })
 
 module.exports = global.wpmjs
