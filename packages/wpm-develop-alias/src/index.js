@@ -60,7 +60,7 @@ const initialValues = {
 }
 const App = () => {
   const onFinish = (values) => {
-    const importMap = getDebugImportMap()
+    const importMap = {}
     values.list.forEach(({name, prop, value}) => {
       importMap[name] = importMap[name] || {}
       importMap[name][prop] = value
