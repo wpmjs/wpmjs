@@ -170,7 +170,7 @@ function Main(props) {
     })
   }, [plugins])
   
-  const [display, _setDisplay] = useState(localStorage.getItem("wpm-debug-expand") == 1);
+  const [display, _setDisplay] = useState(localStorage.getItem("wpm-debug-expand") != 0);
   function setDisplay(val) {
     localStorage.setItem("wpm-debug-expand", val ? 1 : 0)
     _setDisplay(val)
@@ -186,6 +186,7 @@ function Main(props) {
     const keys = Object.keys(queryMap).filter(k => k !== 'wpmDebug');
     const query = keys.length ? '?' + keys.map(k => `${k}=${queryMap[k]}`).join('&') : '';
 
+    localStorage.setItem('wpm-debug-expand', 0);
     localStorage.removeItem('wpm-debug-open');
     window.location.href = window.location.href.replace(/\?[^\#]+/, query);
   }
