@@ -170,7 +170,11 @@ function Main(props) {
     })
   }, [plugins])
   
-  const [display, setDisplay] = useState(true);
+  const [display, _setDisplay] = useState(localStorage.getItem("wpm-debug-expand") == 1);
+  function setDisplay(val) {
+    localStorage.setItem("wpm-debug-expand", val ? 1 : 0)
+    _setDisplay(val)
+  }
 
   const [pkgList, setPkgList] = useState(JSON.parse(localStorage.getItem('wpm-pkgList')) || []);
   function updatePkgList() {
