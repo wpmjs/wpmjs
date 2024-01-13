@@ -2,8 +2,9 @@ import requestParse from "package-request-parse"
 
 export default function Config(config = {}) {
   this.name = config.name || ""
+  this.shareScope = config.shareScope || "default"
   this.baseUrl =  config.baseUrl || ""
-  // this.defaultAutoModuleType = config.defaultAutoModuleType
+  this.defaultAutoModuleType = config.defaultAutoModuleType || function(){}
   this.defaultModuleType = config.defaultModuleType || function(){return "system"}
   this.defaultVersion = config.defaultVersion || function(){return "latest"}
   this.defaultImportMap = config.defaultImportMap || function(name) {}
@@ -40,11 +41,13 @@ prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
       moduleType: "mf",
       global: globalKey,
       url,
+      shareScope: this.shareScope
     }
   }
   if (/https?:\/\//.test(obj)) {
     return {
       url: obj,
+      shareScope: this.shareScope
     }
   }
   if (typeof obj === "string") {
@@ -61,7 +64,7 @@ prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
       packageVersion: requestObj.version || undefined,
       packageFilename: requestObj.entry || undefined,
       strictVersion: undefined,
-      shareScope: undefined
+      shareScope: this.shareScope
     }
   }
   let requestObj = {
@@ -89,7 +92,7 @@ prototype.requestFormatConfig = function requestFormatConfig(obj = "") {
     packageVersion: obj.packageVersion || requestObj.version || undefined,
     packageFilename: obj.packageFilename || requestObj.entry || undefined,
     strictVersion: obj.strictVersion,
-    shareScope: obj.shareScope,
+    shareScope: obj.shareScope || this.shareScope,
   }
 }
 

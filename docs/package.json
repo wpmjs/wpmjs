@@ -1,0 +1,17 @@
+{
+  "name": "wpmjs-docs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "vitepress": "1.0.0-rc.20"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs:dev": "vitepress dev src --port 3003",
+    "docs:build": "vitepress build src",
+    "docs:preview": "vitepress preview src --8080"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

@@ -24,7 +24,7 @@ declare module 'wpmjs' {
   }
 
   class Wpmjs {
-    constructor(options?: { name?: string });
+    constructor(options?: { name?: string, shareScope?: string });
 
     setConfig(config: {
       baseUrl: string;
