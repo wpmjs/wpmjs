@@ -85,7 +85,7 @@ const App = () => {
         {(fields, { add, remove }, { errors }) => (
           <>
             {fields.map((field, index) => (
-              <div style={{display: "flex", marginTop: 10}}>
+              <div key={index} style={{display: "flex", marginTop: 10}}>
                 <Form.Item
                   name={[field.name, 'name']}
                   noStyle
