@@ -11,7 +11,10 @@
     "docs:build": "vitepress build src",
     "docs:preview": "vitepress preview src --8080"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "帮助您快速生成简单易用的站点文档"
 }
