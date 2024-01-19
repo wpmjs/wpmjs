@@ -11,6 +11,9 @@
     "docs:build": "vitepress build src",
     "docs:preview": "vitepress preview src --8080"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "author": "",
   "license": "ISC",
   "description": ""
