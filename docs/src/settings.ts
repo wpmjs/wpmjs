@@ -81,6 +81,6 @@ export default {
 
   deploy: {
     outDir: '../build',
-    base: ''
+    base: '/wpmjs/build'
   }
 }
