@@ -80,7 +80,7 @@ export default {
   },
 
   deploy: {
-    outDir: '../dist',
+    outDir: '../build',
     base: ''
   }
 }
