@@ -1,1 +1,1 @@
-https://wpmjs.github.io/wpmjs/build/contribute/loader.html
+[https://wpmjs.github.io/wpmjs/build/index.html](https://wpmjs.github.io/wpmjs/build/index.html)

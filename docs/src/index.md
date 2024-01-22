@@ -13,13 +13,13 @@ hero:
   actions:
     - theme: brand
       text: 开始
-      link: /guide/
+      link: guide/import-remote
     - theme: alt
       text: 为什么选wpmjs？
       link: /guide/why
     - theme: alt
       text: github
-      link: https://github.com/weimob-tech/wpmjs
+      link: https://github.com/wpmjs/wpmjs
 
 features:
   - icon: ⚡️

@@ -18,7 +18,7 @@ export default {
     },
     {
       text: 'GitHub',
-      link: 'https://github.com/weimob-tech/wpmjs'
+      link: 'https://github.com/wpmjs/wpmjs'
     },
   ],
 
