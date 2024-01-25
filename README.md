@@ -1,7 +1,7 @@
 ## wpmjs（web package manager）
 
 [![npm](https://img.shields.io/npm/v/wpmjs.svg)](https://www.npmjs.com/package/wpmjs)
-[中文文档](https://wpmjs.github.io/wpmjs/build/contribute/loader.html)
+[中文文档](https://wpmjs.github.io/wpmjs/build/index.html)
 
 wpmjs is a loader that can load umd, system, module-federation and share dependencies, Supports custom or extended module loaders, supports multi-version coexistence, and is also equipped with debugging plug-ins and packaging tool plug-ins.
 
