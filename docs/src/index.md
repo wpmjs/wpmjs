@@ -19,7 +19,7 @@ hero:
       link: /guide/why
     - theme: alt
       text: github
-      link: https://github.com/wpmjs/wpmjs
+      link: https://github.com/weimob-tech/wpmjs
 
 features:
   - icon: ⚡️
