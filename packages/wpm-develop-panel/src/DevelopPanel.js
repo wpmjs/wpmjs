@@ -21,6 +21,24 @@ export function getDebugImportMap(name) {
   return name ? debugImportMap[name] : debugImportMap
 }
 
+const debugList = (function () {
+  try {
+    const importMap = getDebugImportMap()
+    return Object.keys(importMap).map(name => {
+      const config = importMap[name]
+      if (config.url) {
+        return {
+          name,
+          url: config.url
+        }
+      }
+      return props
+    }).filter(config => !!config)
+  } catch (e) {
+    return []
+  }
+})()
+
 const queryMap = parseURLQuery();
 let ws = null
 let wsConnected = false;
@@ -179,7 +197,9 @@ function Main(props) {
   const [pkgList, setPkgList] = useState(JSON.parse(localStorage.getItem('wpm-pkgList')) || []);
   function updatePkgList() {
     const list = JSON.parse(localStorage.getItem('wpm-pkgList'))
-    setPkgList([...list])
+    const urlSet = new Set(list.map(item => item.url))
+    console.log(123123, urlSet, debugList)
+    setPkgList([...debugList.filter(item => !urlSet.has(item.url)), ...list])
   }
 
   function handleClose() {
